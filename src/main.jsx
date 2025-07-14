@@ -1,16 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx'; // <-- Импортируем ваш главный компонент App
-import './index.css'; // <-- Импортируем глобальные стили
-import { AuthProvider } from './context/AuthContext.jsx'; // <-- Импортируем ваш провайдер аутентификации
+import App from './App.jsx';
+import './index.css';
+import { AuthProvider } from './context/AuthContext.jsx';
 
-// 1. Находим тот самый <div id="root"> в index.html
 const rootElement = document.getElementById('root');
 
-// 2. Создаем "корень" рендера React в этом div
+// "корень" рендера React в этом div
 const root = ReactDOM.createRoot(rootElement);
 
-// 3. Рендерим (отрисовываем) ваше приложение
 root.render(
     <React.StrictMode>
         {/*

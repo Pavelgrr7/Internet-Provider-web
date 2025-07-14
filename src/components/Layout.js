@@ -11,8 +11,8 @@ const Layout = ({ children }) => {
                 <nav>
                     <NavLink to="/dashboard">Мой кабинет</NavLink>
 
-                    {/* --- УСЛОВНЫЙ РЕНДЕРИНГ --- */}
                     {/* Показываем ссылку только если роль пользователя - ADMIN */}
+                    {/* Будет сделано позже */}
                     {user?.role === 'ROLE_ADMIN' && (
                         <NavLink to="/admin">Панель администратора</NavLink>
                     )}

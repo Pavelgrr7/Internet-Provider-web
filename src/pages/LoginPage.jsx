@@ -1,0 +1,93 @@
+// src/LoginPage.jsx
+import React, { useState } from 'react';
+import './LoginPage.css';
+
+function LoginPage() {
+    const [login, setLogin] = useState('');
+    const [password, setPassword] = useState('');
+
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault(); // Отменяем стандартное поведение формы (перезагрузку страницы)
+        const requestBody = JSON.stringify({ "login": login, "password": password });
+        console.log('Отправляю данные:', requestBody);
+
+        const url = "http://127.0.0.1:8080/api/auth/login";
+
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: requestBody,
+            });
+
+            if (!response.ok) {
+                console.error("Ошибка аутентификации:", response.status);
+                return;
+            }
+
+            const data = await response.json();
+            console.log("Получен ответ:", data);
+
+            // Работа с токеном (пока что только сохранение и редирект на главную
+            if (data.token) {
+                localStorage.setItem('authToken', data.token);
+                window.location.href = '/'; // Простой способ
+            }
+
+        } catch (error) {
+            console.error("Сетевая ошибка или ошибка в запросе:", error);
+        }
+    };
+
+    return (
+        <div className="login-container">
+            <h1>Личный кабинет</h1>
+            {/* Используем тег <form> и его событие onSubmit */}
+            <form onSubmit={handleSubmit}>
+                <div className="input-group">
+                    <label htmlFor="username">Логин</label>
+                    <input
+                        type="text"
+                        id="username"
+                        value={login} // Значение привязано к состоянию
+                        onChange={(e) => setLogin(e.target.value)} // При изменении обновляем состояние
+                        required
+                    />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="password">Пароль</label>
+                    <input
+                        type={isPasswordVisible ? "text" : "password"}
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                    {/* Кнопка для переключения видимости пароля */}
+                    <button
+                        type="button"
+                        className="toggle-password"
+                        onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                    >
+                        {isPasswordVisible ? "🙈" : "👁"}
+                    </button>
+                </div>
+                <button type="submit" id="login_button">Войти</button>
+            </form>
+        </div>
+    );
+}
+
+export default LoginPage;
+
+
+
+// let json = JSON.stringify({ "name":"Стандарт",
+//     "declaredSpeed":100,
+//     "installationFee":1000,
+//     "ipAddressType":"Статический",
+//     "startDate":"2019-03-27"})

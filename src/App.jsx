@@ -1,31 +1,30 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {BrowserRouter, Routes, Route, Link} from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import AdminPage from './pages/AdminPage';
-import ProtectedRoute from './components/ProtectedRoute.jsx';
+// import DashboardPage from './pages/DashboardPage';
+// import AdminPage from './pages/AdminPage';
+// import ProtectedRoute from './components/ProtectedRoute';
+
+function HomePage() {
+    return (
+        <div>
+            <h1>Главная страница</h1>
+            <p>Вы успешно вошли в систему!</p>
+        </div>
+    );
+}
 
 function App() {
     return (
         <BrowserRouter>
-            <Routes>
-                <Route path="/login" element={<LoginPage />} />
-
-                {/* Защищенный маршрут для ОБЫЧНОГО пользователя */}
-                <Route path="/dashboard" element={
-                    <ProtectedRoute allowedRoles={['ROLE_USER']}>
-                        <DashboardPage />
-                    </ProtectedRoute>
-                } />
-
-                {/* Защищенный маршрут для АДМИНА */}
-                <Route path="/admin" element={
-                    <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
-                        <AdminPage />
-                    </ProtectedRoute>
-                } />
-
-                {/* ... другие маршруты ... */}
-            </Routes>
+            <div>
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    {/* здесь будут и другие маршруты */}
+                </Routes>
+            </div>
         </BrowserRouter>
     );
 }
+
+export default App;
