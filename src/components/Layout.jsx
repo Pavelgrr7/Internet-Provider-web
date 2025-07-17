@@ -11,8 +11,6 @@ const Layout = ({ children }) => {
                 <nav>
                     <NavLink to="/dashboard">Мой кабинет</NavLink>
 
-                    {/* Показываем ссылку только если роль пользователя - ADMIN */}
-                    {/* Будет сделано позже */}
                     {user?.role === 'ROLE_ADMIN' && (
                         <NavLink to="/admin">Панель администратора</NavLink>
                     )}
@@ -20,9 +18,9 @@ const Layout = ({ children }) => {
                 <button onClick={logout}>Выйти</button>
             </header>
             <main>
-                {children} {/* Здесь будет отображаться основной контент страницы */}
+                {children}
             </main>
-            <footer>© 2024 T-s-t Internet Services</footer>
+            <footer>© 2025 T-s-t Internet Services</footer>
         </div>
     );
 }

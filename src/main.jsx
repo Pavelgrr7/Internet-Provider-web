@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
+import App from './App';
 import './index.css';
-import { AuthProvider } from './context/AuthContext.jsx';
+import { AuthProvider } from './context/AuthProvider';
 
 const rootElement = document.getElementById('root');
 
@@ -11,10 +11,6 @@ const root = ReactDOM.createRoot(rootElement);
 
 root.render(
     <React.StrictMode>
-        {/*
-      Оборачиваем всё приложение в AuthProvider, чтобы все дочерние
-      компоненты имели доступ к информации о пользователе.
-    */}
         <AuthProvider>
             <App />
         </AuthProvider>
