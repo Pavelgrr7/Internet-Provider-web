@@ -1,12 +1,18 @@
 // src/LoginPage.jsx
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import './LoginPage.css';
+import {AuthContext} from "../context/AuthContext.jsx";
+import {useNavigate} from "react-router-dom";
 
 function LoginPage() {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    const { login: authLogin } = useContext(AuthContext);
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault(); // Отменяем стандартное поведение формы (перезагрузку страницы)
@@ -32,10 +38,12 @@ function LoginPage() {
             const data = await response.json();
             console.log("Получен ответ:", data);
 
-            // Работа с токеном (пока что только сохранение и редирект на главную
+            // AuthContext(data)
+
             if (data.token) {
+                authLogin(data);
                 localStorage.setItem('authToken', data.token);
-                window.location.href = '/'; // Простой способ
+                navigate('/dashboard');
             }
 
         } catch (error) {
@@ -46,7 +54,6 @@ function LoginPage() {
     return (
         <div className="login-container">
             <h1>Личный кабинет</h1>
-            {/* Используем тег <form> и его событие onSubmit */}
             <form onSubmit={handleSubmit}>
                 <div className="input-group">
                     <label htmlFor="username">Логин</label>
