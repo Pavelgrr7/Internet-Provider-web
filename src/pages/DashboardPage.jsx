@@ -5,15 +5,18 @@ import { AuthContext } from '../context/AuthContext.jsx';
 
 import UserContractsWidget from '../components/UserContractsWidget.jsx';
 import AdminTariffManagerWidget from '../components/AdminTariffManagerWidget.jsx';
-import AdminUserListWidget from '../components/AdminUserListWidget.jsx'; // Предположим, вы его создали
+import AdminUserListWidget from '../components/AdminUserListWidget.jsx';
+import {useNavigate} from "react-router-dom"; // Предположим, вы его создали
 
 const DashboardPage = () => {
     const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
+
 
     // хех
     if (!user) {
         console.log(user)
-        return <div>Загрузка...</div>;
+        return navigate('/login');
     }
 
     return (
