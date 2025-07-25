@@ -5,9 +5,7 @@ import Layout from "./components/Layout.jsx";
 import UserContractsPage from "./pages/UserContractPage.jsx";
 import PrivateRoute from "./context/PrivateRoute.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
-// import DashboardPage from './pages/DashboardPage';
-// import AdminPage from './pages/AdminPage';
-// import ProtectedRoute from './components/ProtectedRoute';
+import AdminSubscribersPage from './pages/AdminSubscribersPage';
 
 function HomePage() {
     return (
@@ -42,6 +40,7 @@ function App() {
 
                     <Route path="my-contract" element={<UserContractsPage />} />
                     <Route path="profile" element={<ProfilePage />} />
+                    <Route path="admin/subscribers" element={<AdminSubscribersPage />} />
 
                     {/* Здесь будут другие роуты личного кабинета */}
                 </Route>

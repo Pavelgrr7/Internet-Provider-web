@@ -11,20 +11,27 @@ const DashboardPage = () => {
     const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    const handleLogout = () => {
+        // 2. Вызываем функцию из контекста
+        logout();
+        // 3. После выхода перенаправляем пользователя на страницу входа
+        navigate('/login');
+    };
+
     const userMenu = [
         { title: 'Профиль', description: 'Ваши личные данные', icon: <FaUserAlt />, path: '/dashboard/profile' },
         { title: 'Мой договор', description: 'Информация о договоре', icon: <FaFileContract />, path: '/dashboard/my-contract' },
-        { title: 'Мой тариф', description: 'Детали вашего тарифа', icon: <FaTags />, path: '/my-tariff' },
-        { title: 'Доп. услуги', description: 'Подключить или отключить', icon: <FaPlusCircle />, path: '/services' },
+        { title: 'Мой тариф', description: 'Детали вашего тарифа', icon: <FaTags />, path: '/dashboard/my-tariff' },
+        { title: 'Доп. услуги', description: 'Подключить или отключить', icon: <FaPlusCircle />, path: '/dashboard/services' },
         { title: 'Выход', description: 'Завершить сеанс', icon: <FaSignOutAlt />, action: logout }
     ];
 
     const adminMenu = [
         { title: 'Профиль', description: 'Ваши личные данные', icon: <FaUserAlt />, path: '/dashboard/profile' },
-        { title: 'Мои отчёты', description: 'Статистика и аналитика', icon: <FaChartBar />, path: '/admin/reports' },
-        { title: 'Тарифы', description: 'Управление тарифами', icon: <FaTags />, path: '/admin/tariffs' },
-        { title: 'Пользователи', description: 'Управление абонентами', icon: <FaUsers />, path: '/admin/users' },
-        { title: 'Выход', description: 'Завершить сеанс', icon: <FaSignOutAlt />, action: logout }
+        { title: 'Мои отчёты', description: 'Статистика и аналитика', icon: <FaChartBar />, path: '/dashboard/admin/reports' },
+        { title: 'Тарифы', description: 'Управление тарифами', icon: <FaTags />, path: '/dashboard/admin/tariffs' },
+        { title: 'Пользователи', description: 'Управление абонентами', icon: <FaUsers />, path: '/dashboard/admin/subscribers' },
+        { title: 'Выход', description: 'Завершить сеанс', icon: <FaSignOutAlt />, action: handleLogout }
     ];
 
     const menuItems = user?.role === 'ROLE_ADMIN' ? adminMenu : userMenu;

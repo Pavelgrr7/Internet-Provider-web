@@ -8,17 +8,12 @@ const ProfilePage = () => {
     const [profileData, setProfileData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // --- НОВЫЕ СОСТОЯНИЯ ---
-    // Для смены пароля
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
 
-    // Для смены email
     const [isEditingEmail, setIsEditingEmail] = useState(false);
     const [newEmail, setNewEmail] = useState('');
 
-    // Для сообщений об успехе/ошибке
     const [message, setMessage] = useState('');
 
     const url = 'http://127.0.0.1:8080/api/users/my';
