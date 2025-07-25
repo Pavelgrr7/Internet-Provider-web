@@ -1,6 +1,6 @@
 // src/LoginPage.jsx
 import React, {useContext, useState} from 'react';
-import './LoginPage.css';
+import '../styles/LoginPage.css';
 import {AuthContext} from "../context/AuthContext.jsx";
 import {useNavigate} from "react-router-dom";
 

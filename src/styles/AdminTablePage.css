@@ -79,3 +79,8 @@
     color: blue;
     text-decoration: underline;
 }
+
+.btn-archive {
+    background-color: #ffc107; /* Желтый/оранжевый для предупреждающих действий */
+    color: #212529;
+}

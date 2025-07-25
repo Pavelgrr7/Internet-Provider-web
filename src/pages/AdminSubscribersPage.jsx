@@ -34,6 +34,7 @@ const AdminSubscribersPage = () => {
                 }
 
                 const data = await response.json();
+
                 setSubscribers(data);
                 console.log(`Получен список пользователей: ${data}`);
             } catch (e) {
@@ -65,6 +66,7 @@ const AdminSubscribersPage = () => {
             });
             if (!response.ok) throw new Error('Не удалось загрузить данные договора');
             const data = await response.json();
+
             setSelectedContract(data);
         } catch (error) {
             console.error(error);
@@ -100,7 +102,7 @@ const AdminSubscribersPage = () => {
                         <td>{subscriber.lastName} {subscriber.firstName} {subscriber.middleName}</td>
                         <td>{subscriber.login}</td>
                         <td>{subscriber.email}</td>
-                        <td>{subscriber.phoneNumber}</td>
+                        <td>{formatPhoneNumber(subscriber.phoneNumber)}</td>
                         <td>
                             {subscriber.contracts.map(contract => (
                                 // Делаем номер договора кликабельным
@@ -143,5 +145,18 @@ const AdminSubscribersPage = () => {
         </div>
     );
 };
+
+function formatPhoneNumber(rawNumber) {
+    const cleaned = ('' + rawNumber).replace(/\D/g, '');
+
+    const match = cleaned.match(/^(\d|)?(\d{3})(\d{3})(\d{2})(\d{2})$/);
+
+    if (match) {
+        const intlCode = (match[1] ? '+7' : '');
+        return [intlCode, '(', match[2], ') ', match[3], '-', match[4], '-', match[5]].join('');
+    }
+
+    return rawNumber;
+}
 
 export default AdminSubscribersPage;

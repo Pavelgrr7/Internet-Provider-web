@@ -12,9 +12,7 @@ const DashboardPage = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        // 2. Вызываем функцию из контекста
         logout();
-        // 3. После выхода перенаправляем пользователя на страницу входа
         navigate('/login');
     };
 
