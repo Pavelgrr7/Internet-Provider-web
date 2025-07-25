@@ -1,3 +1,5 @@
+import '../styles/common.css';
+
 const UserContractsWidget = () => {
     return (
         <div>

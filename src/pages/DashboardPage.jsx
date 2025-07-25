@@ -1,42 +1,66 @@
 // src/pages/DashboardPage.jsx
-
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
+import DashboardCard from '../components/DashboardCard.jsx';
+import '../styles/Dashboard.css';
 
-import UserContractsWidget from '../components/UserContractsWidget.jsx';
-import AdminTariffManagerWidget from '../components/AdminTariffManagerWidget.jsx';
-import AdminUserListWidget from '../components/AdminUserListWidget.jsx';
-import {useNavigate} from "react-router-dom"; // Предположим, вы его создали
+import { FaUserAlt, FaFileContract, FaTags, FaPlusCircle, FaSignOutAlt, FaChartBar, FaUsers } from 'react-icons/fa';
 
 const DashboardPage = () => {
-    const { user } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    const userMenu = [
+        { title: 'Профиль', description: 'Ваши личные данные', icon: <FaUserAlt />, path: '/dashboard/profile' },
+        { title: 'Мой договор', description: 'Информация о договоре', icon: <FaFileContract />, path: '/dashboard/my-contract' },
+        { title: 'Мой тариф', description: 'Детали вашего тарифа', icon: <FaTags />, path: '/my-tariff' },
+        { title: 'Доп. услуги', description: 'Подключить или отключить', icon: <FaPlusCircle />, path: '/services' },
+        { title: 'Выход', description: 'Завершить сеанс', icon: <FaSignOutAlt />, action: logout }
+    ];
 
-    // хех
+    const adminMenu = [
+        { title: 'Профиль', description: 'Ваши личные данные', icon: <FaUserAlt />, path: '/dashboard/profile' },
+        { title: 'Мои отчёты', description: 'Статистика и аналитика', icon: <FaChartBar />, path: '/admin/reports' },
+        { title: 'Тарифы', description: 'Управление тарифами', icon: <FaTags />, path: '/admin/tariffs' },
+        { title: 'Пользователи', description: 'Управление абонентами', icon: <FaUsers />, path: '/admin/users' },
+        { title: 'Выход', description: 'Завершить сеанс', icon: <FaSignOutAlt />, action: logout }
+    ];
+
+    const menuItems = user?.role === 'ROLE_ADMIN' ? adminMenu : userMenu;
+
+    // Функция-обработчик клика по карточке
+    const handleCardClick = (item) => {
+        if (item.action) {
+            item.action();
+            navigate('/login');
+        } else if (item.path) {
+            navigate(item.path);
+        }
+    };
+
     if (!user) {
-        console.log(user)
-        return navigate('/login');
+        return <div>Загрузка данных пользователя...</div>;
     }
 
     return (
-        <div>
+        <div className="dashboard-container">
             <h1>Добро пожаловать, {user.login}!</h1>
-            <p>Это ваш личный кабинет.</p>
+            <p>Выберите раздел для перехода в личном кабинете.</p>
             <hr />
 
-            {user.role === 'ROLE_USER' && (
-                <>
-                    <UserContractsWidget />
-                </>
-            )}
-
-            {user.role === 'ROLE_ADMIN' && (
-                <>
-                    <AdminTariffManagerWidget />
-                    <AdminUserListWidget />
-                </>
-            )}
+            <div className="dashboard-grid">
+                {/* Рендер карточек с помощью .map() */}
+                {menuItems.map((item) => (
+                    <DashboardCard
+                        key={item.title}
+                        title={item.title}
+                        description={item.description}
+                        icon={item.icon}
+                        onClick={() => handleCardClick(item)}
+                    />
+                ))}
+            </div>
         </div>
     );
 };

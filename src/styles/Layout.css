@@ -1,0 +1,23 @@
+/* src/components/Layout.css */
+
+.layout-container {
+    display: flex; /* Включаем Flexbox */
+    flex-direction: column; /* Располагаем элементы (header, main, footer) в столбик */
+    min-height: 100vh; /* Задаем минимальную высоту, равную высоте экрана */
+}
+
+.main-content {
+    flex-grow: 1; /* <-- ЭТО ГЛАВНАЯ МАГИЯ */
+    /* Это свойство заставляет main "растянуться" и занять все
+       свободное пространство по вертикали, тем самым "отталкивая"
+       футер вниз. */
+}
+
+.footer {
+    /* Стили для вашего футера */
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    /* flex-shrink: 0; */ /* Это необязательно, но гарантирует, что футер не будет сжиматься */
+}

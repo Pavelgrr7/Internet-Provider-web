@@ -1,0 +1,70 @@
+/* src/styles/Dashboard.css */
+
+.dashboard-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dashboard-container h1 {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.dashboard-container p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.dashboard-container hr {
+    border: 0;
+    height: 1px;
+    background: #e0e0e0;
+    margin-bottom: 2rem;
+}
+
+/* Сетка для наших карточек */
+.dashboard-grid {
+    display: grid;
+    /* Создает колонки шириной минимум 250px, которые автоматически заполняют доступное пространство */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem; /* Отступы между карточками */
+}
+
+/* Стили для самой карточки в Material-стиле */
+.dashboard-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px); /* Приподнимаем карточку при наведении */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.card-icon {
+    font-size: 3rem; /* Размер иконки */
+    color: #5b2aed; /* Ваш фиолетовый цвет */
+    margin-bottom: 1rem;
+}
+
+.card-content h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.card-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #777;
+}

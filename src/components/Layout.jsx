@@ -1,24 +1,20 @@
-import { useContext } from 'react';
+// import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext.jsx';
 import { NavLink, Outlet } from 'react-router-dom';
+import '../styles/Layout.css'
 
 const Layout = () => {
-    const { user, logout } = useContext(AuthContext);
+    // const { user, logout } = useContext(AuthContext);
     return (
-        <div>
+        <div className="layout-container">
             <header>
-                <nav>
-                    <NavLink to="/dashboard">Мой кабинет</NavLink>
-                    {user?.role === 'ROLE_ADMIN' && (
-                        <NavLink to="/admin/tariffs">Управление тарифами</NavLink>
-                    )}
-                </nav>
-                <button onClick={logout}>Выйти</button>
             </header>
-            <main>
+            <main className="main-content">
                 <Outlet />
             </main>
-            <footer>© 2025 Internet Services</footer>
+            <footer className="footer">
+                © 2025 TST Internet Services
+            </footer>
         </div>
     );
 }

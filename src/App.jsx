@@ -2,6 +2,9 @@ import {BrowserRouter, Routes, Route, Link} from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from "./pages/DashboardPage.jsx";
 import Layout from "./components/Layout.jsx";
+import UserContractsPage from "./pages/UserContractPage.jsx";
+import PrivateRoute from "./context/PrivateRoute.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 // import DashboardPage from './pages/DashboardPage';
 // import AdminPage from './pages/AdminPage';
 // import ProtectedRoute from './components/ProtectedRoute';
@@ -21,23 +24,28 @@ function HomePage() {
 function App() {
     return (
         <BrowserRouter>
-            <div>
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                                <Layout />
-                        }
-                    >
-                        {/* А это - дочерние маршруты. Они будут рендериться ВНУТРИ <Outlet /> */}
-                        <Route path="dashboard" element={<DashboardPage />} />
-                        {/*<Route path="admin/tariffs" element={<AdminTariffPage />} />*/}
-                    </Route>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    {/* здесь будут и другие маршруты */}
-                </Routes>
-            </div>
+            <Routes>
+                {/* Публичные роуты, доступные всем */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+
+                <Route
+                    path="/dashboard"
+                    element={
+                        <PrivateRoute>
+                            <Layout />
+                        </PrivateRoute>
+                    }
+                >
+                    {/* Дочерние роуты. path указывается относительно родителя. */}
+                    <Route index element={<DashboardPage />} />
+
+                    <Route path="my-contract" element={<UserContractsPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
+
+                    {/* Здесь будут другие роуты личного кабинета */}
+                </Route>
+            </Routes>
         </BrowserRouter>
     );
 }
