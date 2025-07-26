@@ -7,6 +7,7 @@ import PrivateRoute from "./context/PrivateRoute.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import AdminSubscribersPage from './pages/AdminSubscribersPage';
 import AdminTariffsPage from './pages/AdminTariffsPage.jsx';
+import UserManageServicesPage from './pages/UserManageServicesPage.jsx';
 
 
 function HomePage() {
@@ -42,6 +43,7 @@ function App() {
 
                     <Route path="my-contract" element={<UserContractsPage />} />
                     <Route path="profile" element={<ProfilePage />} />
+                    <Route path="services" element={<UserManageServicesPage />} />
                     <Route path="admin/subscribers" element={<AdminSubscribersPage />} />
                     <Route path="admin/tariffs" element={<AdminTariffsPage />} />
 

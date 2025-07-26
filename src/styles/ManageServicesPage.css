@@ -1,0 +1,63 @@
+/* src/styles/ManageServicesPage.css */
+
+
+
+
+.main-row {
+    cursor: pointer;
+    user-select: none; /* Чтобы текст не выделялся при клике */
+}
+
+.expand-icon {
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.details-row td {
+    padding: 0;
+    border-top: none; /* Убираем лишнюю границу */
+}
+
+.details-content {
+    background-color: #fafafa;
+    padding: 1.5rem 2rem;
+    animation: fadeIn 0.3s;
+}
+
+.details-content h4 {
+    margin-top: 0;
+}
+
+.services-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.services-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.btn-disconnect, .btn-connect {
+    background: none;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn-disconnect { color: #dc3545; border-color: #dc3545; }
+.btn-connect { color: #28a745; border-color: #28a745; }
+
+
+.btn-add-service {
+    /* ... стили для кнопки добавления ... */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

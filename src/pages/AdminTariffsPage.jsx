@@ -91,7 +91,7 @@ const AdminTariffsPage = () => {
                                     Изменить
                                 </button>
                                 <button
-                                    className="btn-action btn-archive" // Добавим новый класс для стилизации
+                                    className="btn-action btn-archive"
                                     onClick={() => handleArchiveClick(tariff.id)}
                                 >
                                     Архивировать
