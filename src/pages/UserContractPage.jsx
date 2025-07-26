@@ -65,14 +65,14 @@ const UserContractsPage = () => {
     }
 
     return (
-        <div>
+        <>
             <h1>Информация по вашему договору</h1>
             <p><strong>Номер договора:</strong> {contractData.contractNumber}</p>
             <p><strong>Адрес подключения:</strong> {contractData.serviceAddress}</p>
             <p><strong>Дата подписания:</strong> {new Date(contractData.signingDate).toLocaleDateString()}</p>
             <p><strong>Ваш месячный платёж:</strong> {contractData.monthlyFee} руб.</p>
             {/* ... и так далее ... */}
-        </div>
+        </>
     );
 };
 

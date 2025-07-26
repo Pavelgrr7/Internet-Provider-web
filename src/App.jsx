@@ -7,6 +7,7 @@ import PrivateRoute from "./context/PrivateRoute.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import AdminSubscribersPage from './pages/AdminSubscribersPage';
 import AdminTariffsPage from './pages/AdminTariffsPage.jsx';
+import AdminReportsPage from './pages/AdminReportsPage';
 import UserManageServicesPage from './pages/UserManageServicesPage.jsx';
 
 
@@ -45,6 +46,7 @@ function App() {
                     <Route path="profile" element={<ProfilePage />} />
                     <Route path="services" element={<UserManageServicesPage />} />
                     <Route path="admin/subscribers" element={<AdminSubscribersPage />} />
+                    <Route path="admin/reports" element={<AdminReportsPage />} />
                     <Route path="admin/tariffs" element={<AdminTariffsPage />} />
 
                     {/* Здесь будут другие роуты личного кабинета */}

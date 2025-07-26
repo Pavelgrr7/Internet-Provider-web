@@ -42,10 +42,10 @@ const AdminTariffsPage = () => {
         // todo модальное окно
     };
 
-    const handleArchiveClick = (tariffId) => {
-        console.log(`Нажата кнопка "Архивировать" для тарифа с ID: ${tariffId}`);
-        // todo модальное окно
-    };
+    // const handleArchiveClick = (tariffId) => {
+    //     console.log(`Нажата кнопка "Архивировать" для тарифа с ID: ${tariffId}`);
+    //     // todo модальное окно
+    // };
 
 
     if (isLoading) {
@@ -57,7 +57,8 @@ const AdminTariffsPage = () => {
     }
 
     return (
-        <div className="admin-page-container">
+        <>
+            {/* <div className="admin-page-container"> */}
             <h1>Управление тарифами</h1>
             <p>Здесь отображен список всех действующих тарифов компании.</p>
 
@@ -67,7 +68,10 @@ const AdminTariffsPage = () => {
                     <tr>
                         <th>ID</th>
                         <th>Название</th>
-                        <th>Скорость</th>
+                        <th>
+                            <text>Скорость</text>
+                            {/* todo добавить объяснение про скорость*/}
+                        </th>
                         <th>Плата за установку</th>
                         <th>Тип IP</th>
                         <th>Дата начала действия</th>
@@ -90,19 +94,19 @@ const AdminTariffsPage = () => {
                                 >
                                     Изменить
                                 </button>
-                                <button
-                                    className="btn-action btn-archive"
-                                    onClick={() => handleArchiveClick(tariff.id)}
-                                >
-                                    Архивировать
-                                </button>
+                                {/*<button*/}
+                                {/*    className="btn-action btn-archive"*/}
+                                {/*    onClick={() => handleArchiveClick(tariff.id)}*/}
+                                {/*>*/}
+                                {/*    Архивировать*/}
+                                {/*</button>*/}
                             </td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
             </div>
-        </div>
+        </>
     );
 };
 

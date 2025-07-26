@@ -76,7 +76,7 @@ const AdminSubscribersPage = () => {
     };
 
     return (
-        <div className="admin-page-container">
+        <>
             <h1>Управление абонентами</h1>
             <p>Здесь отображен список всех зарегистрированных абонентов.</p>
 
@@ -142,7 +142,7 @@ const AdminSubscribersPage = () => {
                     <p>Не удалось загрузить данные.</p>
                 )}
             </Modal>
-        </div>
+        </>
     );
 };
 

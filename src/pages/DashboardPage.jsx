@@ -1,72 +1,117 @@
 // src/pages/DashboardPage.jsx
-import { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
-import DashboardCard from '../components/DashboardCard.jsx';
-import '../styles/Dashboard.css';
+import '../styles/DashboardTabs.css';
 
-import { FaUserAlt, FaFileContract, FaTags, FaPlusCircle, FaSignOutAlt, FaChartBar, FaUsers } from 'react-icons/fa';
+import ProfilePage from './ProfilePage';
+import UserContractsPage from './UserContractPage';
+import UserManageServicesPage from './UserManageServicesPage';
+import AdminSubscribersPage from './AdminSubscribersPage';
+import AdminTariffsPage from "./AdminTariffsPage.jsx";
+import AdminReportsPage from "./AdminReportsPage.jsx";
+
+// Компонент-заглушка для общей информации
+const OverviewTab = ({ user }) => (
+    <div>
+        <div className="dashboard-header">
+            <h1>Добро пожаловать, {user.login}!</h1>
+            <p>Это ваш личный кабинет.</p>
+            <hr />
+        </div>
+        <h2>Общая информация</h2>
+        <p>Здесь будет краткая сводка по вашему аккаунту.</p>
+        <p>Ваша роль: {user.role === 'ROLE_ADMIN' ? 'Администратор' : 'Абонент'}</p>
+    </div>
+);
+
 
 const DashboardPage = () => {
     const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
+
+    // 1. Состояние для хранения активной вкладки.
+    // 'overview' - это наша начальная вкладка.
+    const [activeTab, setActiveTab] = useState('overview');
 
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
 
-    const userMenu = [
-        { title: 'Профиль', description: 'Ваши личные данные', icon: <FaUserAlt />, path: '/dashboard/profile' },
-        { title: 'Мой договор', description: 'Информация о договоре', icon: <FaFileContract />, path: '/dashboard/my-contract' },
-        { title: 'Мой тариф', description: 'Детали вашего тарифа', icon: <FaTags />, path: '/dashboard/my-tariff' },
-        { title: 'Доп. услуги', description: 'Подключить или отключить', icon: <FaPlusCircle />, path: '/dashboard/services' },
-        { title: 'Выход', description: 'Завершить сеанс', icon: <FaSignOutAlt />, action: logout }
+    // 2. Определяем вкладки для каждой роли
+    const userTabs = [
+        { id: 'overview', label: 'Общая информация' },
+        { id: 'profile', label: 'Профиль' },
+        { id: 'contract', label: 'Мои договоры' },
+        { id: 'services', label: 'Доп. услуги' },
     ];
 
-    const adminMenu = [
-        { title: 'Профиль', description: 'Ваши личные данные', icon: <FaUserAlt />, path: '/dashboard/profile' },
-        { title: 'Мои отчёты', description: 'Статистика и аналитика', icon: <FaChartBar />, path: '/dashboard/admin/reports' },
-        { title: 'Тарифы', description: 'Управление тарифами', icon: <FaTags />, path: '/dashboard/admin/tariffs' },
-        { title: 'Пользователи', description: 'Управление абонентами', icon: <FaUsers />, path: '/dashboard/admin/subscribers' },
-        { title: 'Выход', description: 'Завершить сеанс', icon: <FaSignOutAlt />, action: handleLogout }
+    const adminTabs = [
+        { id: 'overview', label: 'Общая информация' },
+        { id: 'profile', label: 'Профиль' },
+        { id: 'reports', label: 'Отчёты' },
+        { id: 'tariffs', label: 'Тарифы' },
+        { id: 'subscribers', label: 'Абоненты' },
     ];
 
-    const menuItems = user?.role === 'ROLE_ADMIN' ? adminMenu : userMenu;
+    const tabs = user?.role === 'ROLE_ADMIN' ? adminTabs : userTabs;
 
-    // Функция-обработчик клика по карточке
-    const handleCardClick = (item) => {
-        if (item.action) {
-            item.action();
-            navigate('/login');
-        } else if (item.path) {
-            navigate(item.path);
+    // 3. Функция для рендеринга контента активной вкладки
+    const renderTabContent = () => {
+        switch (activeTab) {
+            case 'overview':
+                return <OverviewTab user={user} />;
+            case 'profile':
+                return <ProfilePage />;
+            case 'contract':
+                return <UserContractsPage />;
+            case 'services':
+                return <UserManageServicesPage />;
+            case 'subscribers':
+                return <AdminSubscribersPage />;
+            case 'tariffs':
+                return <AdminTariffsPage />;
+            case 'reports':
+                return <AdminReportsPage />;
+            default:
+                return <OverviewTab user={user} />;
+                // eslint-disable-next-line no-unreachable
+            {/* todo остальные вкладки */}
         }
     };
 
     if (!user) {
-        return <div>Загрузка данных пользователя...</div>;
+        return <div>Загрузка...</div>;
     }
 
     return (
-        <div className="dashboard-container">
-            <h1>Добро пожаловать, {user.login}!</h1>
-            <p>Выберите раздел для перехода в личном кабинете.</p>
-            <hr />
-
-            <div className="dashboard-grid">
-                {/* Рендер карточек с помощью .map() */}
-                {menuItems.map((item) => (
-                    <DashboardCard
-                        key={item.title}
-                        title={item.title}
-                        description={item.description}
-                        icon={item.icon}
-                        onClick={() => handleCardClick(item)}
-                    />
-                ))}
+        <>
+            {/* БЛОК 2: Панель вкладок. Теперь это независимый элемент. */}
+            <div className="tabs-bar-container">
+                <div className="tabs-bar">
+                    {tabs.map(tab => (
+                        <button
+                            key={tab.id}
+                            className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
+                            onClick={() => setActiveTab(tab.id)}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+                    <button onClick={handleLogout} className="tab-button" style={{ marginLeft: 'auto' }}>
+                        Выйти
+                    </button>
+                </div>
             </div>
-        </div>
+
+            {/* БЛОК 2: Контейнер для контента вкладки. */}
+            <div className="tab-content-container">
+                <div className="tab-content">
+                    {renderTabContent()}
+                </div>
+            </div>
+        </>
     );
 };
 

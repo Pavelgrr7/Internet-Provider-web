@@ -168,7 +168,7 @@ const UserManageServicesPage = () => {
     if (error) return <div>Ошибка: {error}</div>;
 
     return (
-        <div className="manage-services-container">
+        <>
             <h1>Управление услугами</h1>
             <div className="table-container">
                 <table className="content-table">
@@ -242,7 +242,7 @@ const UserManageServicesPage = () => {
                     </div>
                 )}
             </Modal>
-        </div>
+        </>
     );
 };
 

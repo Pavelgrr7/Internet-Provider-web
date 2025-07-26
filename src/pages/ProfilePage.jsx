@@ -56,7 +56,7 @@ const ProfilePage = () => {
         e.preventDefault();
         setMessage(''); // Сбрасываем сообщение
 
-        const response = await fetch('/api/users/my/password', {
+        const response = await fetch('http://127.0.0.1:8080/api/users/my/password', {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${user.token}`,
@@ -78,7 +78,7 @@ const ProfilePage = () => {
         e.preventDefault();
         setMessage('');
 
-        const response = await fetch('/api/users/my/email', {
+        const response = await fetch('http://127.0.0.1:8080/api/users/my/email', {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${user.token}`,
@@ -104,7 +104,7 @@ const ProfilePage = () => {
 
 
     return (
-        <div className="profile-container">
+        <>
             <h1>Ваш профиль</h1>
             <div className="profile-card">
                 <h3>Личные данные</h3>
@@ -165,7 +165,7 @@ const ProfilePage = () => {
 
             {/* Сообщение для пользователя */}
             {message && <div className="profile-message">{message}</div>}
-        </div>
+        </>
     );
 };
 
