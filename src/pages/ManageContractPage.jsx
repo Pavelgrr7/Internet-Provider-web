@@ -11,6 +11,9 @@ const ManageContractPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // карточки с договорами
+    const [expandedContractId, setExpandedContractId] = useState(null);
+
     //Состояния для смены тарифа
     const [isChangingTariff, setIsChangingTariff] = useState(false); // Показываем ли форму смены
     const [availableTariffs, setAvailableTariffs] = useState([]); // Список доступных тарифов
@@ -39,6 +42,10 @@ const ManageContractPage = () => {
                 setContracts(contractsData);
                 console.log(`Получены данные по контрактам. количество записей: ${contractsData.length}`);
                 console.log(contractsData);
+                // По умолчанию раскрывается карточка с первым договором
+                if (contractsData && contractsData.length > 0) {
+                    setExpandedContractId(contractsData[0].id);
+                }
             } catch (e) {
                 setError("Ошибка загрузки доступных услуг");
                 console.error(e);
@@ -270,6 +277,11 @@ const ManageContractPage = () => {
         }
     };
 
+    const handleToggleContract = (contractId) => {
+        setExpandedContractId(prevId => (prevId === contractId ? null : contractId));
+    };
+
+
     if (isLoading) return <div>Загрузка...</div>;
     if (error) return <div>Ошибка: {error}</div>;
 
@@ -277,18 +289,31 @@ const ManageContractPage = () => {
     if (!contract) return <div>Нет активных договоров для управления.</div>;
 
     return (
-        <>
-            <div className="manage-contract-container">
-                <h1>Управление договором №{contract.contractNumber}</h1>
-
-                {/* --- БЛОК 1: УПРАВЛЕНИЕ ТАРИФОМ --- */}
-                <div className="management-section">
-                    <h2>Текущий тариф</h2>
-                    <div className="current-tariff-info">
-                        <strong>{contract.tariffName}</strong>
-                        <span>{contract.monthlyFee} руб./мес.</span>
-                    </div>
-
+        // <>
+        //         <h1>Управление договорами</h1>
+        //
+        //         {/* --- СОЗДАЕМ АККОРДЕОН ИЗ СПИСКА ДОГОВОРОВ --- */}
+                <div className="accordion">
+                    {contracts.map(contract => (
+                        <div key={contract.id} className="accordion-item">
+                            <div
+                                className={`accordion-header ${expandedContractId === contract.id ? 'active' : ''}`}
+                                onClick={() => handleToggleContract(contract.id)}
+                            >
+                                <span>Договор №{contract.contractNumber} (Адрес: {contract.serviceAddress})</span>
+                                {expandedContractId === contract.id ? <FaChevronUp /> : <FaChevronDown />}
+                            </div>
+                            {/* --- РЕНДЕРИМ СОДЕРЖИМОЕ ТОЛЬКО ДЛЯ РАСКРЫТОГО ДОГОВОРА --- */}
+                            {expandedContractId === contract.id && (
+                                <div className="accordion-content">
+                                    {/* --- БЛОК 1: УПРАВЛЕНИЕ ТАРИФОМ --- */}
+                                    <div className="management-section">
+                                        <h2>Текущий тариф</h2>
+                                        <div className="current-tariff-info">
+                                            <strong>{contract.tariffName}</strong>
+                                            {/* --- ИСПОЛЬЗУЕМ НОВОЕ ПОЛЕ tariffCost --- */}
+                                            <span>{contract.tariffMonthlyFee.toFixed(2)} руб./мес.</span>
+                                        </div>
                     {!isChangingTariff ? (
                         <button onClick={() => setIsChangingTariff(true)} className="btn btn-secondary">
                             Изменить тариф
@@ -311,40 +336,41 @@ const ManageContractPage = () => {
                             >{isSubmitting ? 'Проверка...' : 'Подтвердить'}</button>
                             <button onClick={() => setIsChangingTariff(false)} className="btn btn-tertiary">Отмена</button>
                         </div>
-                    )}
-                </div>
-
-                {/* --- БЛОК 2: УПРАВЛЕНИЕ УСЛУГАМИ (ИСПРАВЛЕННЫЙ) --- */}
-                <div className="management-section">
-                    <h2>Подключенные услуги ({contract.services.length})</h2>
-
-                    {/* Используем <ul>, как и положено для списка */}
-                    <ul className="services-list">
-                        {contract.services.length > 0 ? (
-                            // Итерируемся по УСЛУГАМ текущего договора, а не по всем договорам
-                            contract.services.map(service => (
-                                // Дочерним элементом <ul> должен быть <li>
-                                <li key={service.id}> {/* Убедитесь, что у услуги есть id */}
-                                    <span>{service.serviceName} ({service.cost.toFixed(2)} руб.)</span>
-                                    <button
-                                        onClick={() => handleDisconnectService(contract.id, service.serviceId)}
-                                        className="btn-disconnect"
-                                    >
-                                        <FaTrash />
-                                    </button>
-                                </li>
-                            ))
-                        ) : (
-                            <li>Нет подключенных услуг</li>
                         )}
-                    </ul>
-
-                    {/* Кнопка для добавления новых услуг */}
-                    <button onClick={() => handleOpenAddModal(contract)} className="btn-add-service">
-                        <FaPlus /> Добавить услугу
-                    </button>
-                </div>
-            </div>
+                                    </div>
+                                    {/* --- БЛОК 2: УПРАВЛЕНИЕ УСЛУГАМИ --- */}
+                                    <div className="management-section">
+                                        <h2>Подключенные услуги ({contract.services.length})</h2>
+                                        <ul className="services-list">
+                                            {contract.services.length > 0 ? (
+                                                // Итерируемся по УСЛУГАМ текущего договора, а не по всем договорам
+                                                contract.services.map(service => (
+                                                    // Дочерним элементом <ul> должен быть <li>
+                                                    <li key={service.id}> {/* Убедитесь, что у услуги есть id */}
+                                                        <span>{service.serviceName} ({service.cost.toFixed(2)} руб.)</span>
+                                                        <button
+                                                            onClick={() => handleDisconnectService(contract.id, service.serviceId)}
+                                                            className="btn-disconnect"
+                                                        >
+                                                            <FaTrash />
+                                                        </button>
+                                                    </li>
+                                                ))
+                                            ) : (
+                                                <li>Нет подключенных услуг</li>
+                                            )}
+                                        </ul>
+                                        <button onClick={() => handleOpenAddModal(contract)} className="btn-add-service">
+                                            <FaPlus /> Добавить услугу
+                                        </button>
+                                    </div>
+                                    <div className="total-fee-section">
+                                        <strong>Итоговая ежемесячная плата: {contract.monthlyFee} руб.</strong>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ))}
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 {isModalLoading ? <p>Загрузка...</p> : (
                     <div>
@@ -388,7 +414,8 @@ const ManageContractPage = () => {
                     </button>
                 </div>
             </Modal>
-        </>
+                </div>
+
     );
 };
 

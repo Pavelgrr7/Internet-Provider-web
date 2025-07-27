@@ -38,19 +38,7 @@ function App() {
                             <Layout />
                         </PrivateRoute>
                     }
-                >
-                    {/* Дочерние роуты. path указывается относительно родителя. */}
-                    <Route index element={<DashboardPage />} />
-
-                    <Route path="my-contract" element={<UserContractsPage />} />
-                    <Route path="profile" element={<ProfilePage />} />
-                    <Route path="manageContract" element={<ManageContractPage />} />
-                    <Route path="admin/subscribers" element={<AdminSubscribersPage />} />
-                    <Route path="admin/reports" element={<AdminReportsPage />} />
-                    <Route path="admin/tariffs" element={<AdminTariffsPage />} />
-
-                    {/* Здесь будут другие роуты личного кабинета */}
-                </Route>
+                />
             </Routes>
         </BrowserRouter>
     );
