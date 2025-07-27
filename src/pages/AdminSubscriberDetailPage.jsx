@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { FaEdit, FaSave, FaTimes, FaPlus } from 'react-icons/fa';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaTrash, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import CreateContractModal from '../components/modal/CreateCotractModal';
 
 import '../styles/AdminDetailPage.css';
@@ -12,6 +12,7 @@ import '../styles/AdminDetailPage.css';
 const EditableField = ({ label, value, onSave }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [currentValue, setCurrentValue] = useState(value);
+
 
     const handleSave = () => {
         onSave(currentValue);
@@ -58,6 +59,8 @@ const AdminSubscriberDetailPage = () => {
         navigate(-1);
     };
 
+    const [expandedContractId, setExpandedContractId] = useState(null);
+
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const handleContractCreated = (newContract) => {
@@ -66,6 +69,31 @@ const AdminSubscriberDetailPage = () => {
             ...prev,
             contracts: [...prev.contracts, newContract]
         }));
+    };
+
+    useEffect(() => {
+        if (subscriber && subscriber.contracts && subscriber.contracts.length > 0) {
+            setExpandedContractId(subscriber.contracts[0].id);
+        }
+    }, [subscriber]); // Запускаем, когда данные абонента загрузятся
+
+    const handleToggleContract = (contractId) => {
+        setExpandedContractId(prevId => (prevId === contractId ? null : contractId));
+    };
+
+    const handleEditContract = (contractId) => {
+        // Перенаправляем на страницу управления этим договором,
+        // которую вы уже сделали для абонентов
+        navigate(`/dashboard/manage-contract/${contractId}`);
+    };
+
+    const handleDeleteContract = (contractId) => {
+        // Здесь будет логика для открытия модального окна подтверждения удаления
+        if (window.confirm(`Вы уверены, что хотите удалить договор №${contractId}?`)) {
+            console.log("Удаляем договор:", contractId);
+            // ... fetch-запрос DELETE /api/contracts/{contractId} ...
+            // и обновление состояния
+        }
     };
 
     // Загрузка данных об абоненте
@@ -139,27 +167,120 @@ const AdminSubscriberDetailPage = () => {
 
             <div className="detail-card">
                 <h2>Договоры ({subscriber.contracts.length})</h2>
-                <button className="btn btn-primary" onClick={() => setIsCreateModalOpen(true)} style={{marginBottom: '1rem'}}>
-                    <FaPlus /> Новый договор
-                </button>
-                <table className="content-table">
-                    <thead>
-                    <tr><th>Номер</th><th>Адрес</th><th>Дата подписания</th></tr>
-                    </thead>
-                    <tbody>
+                {/*<button className="btn btn-primary" onClick={() => setIsCreateModalOpen(true)} style={{marginBottom: '1rem'}}>*/}
+                {/*    <FaPlus /> Новый договор*/}
+                {/*</button>*/}
+                {/*<table className="content-table">*/}
+                {/*    <thead>*/}
+                {/*    <tr><th>Номер</th><th>Адрес</th><th>Дата подписания</th></tr>*/}
+                {/*    </thead>*/}
+                {/*    <tbody>*/}
+                {/*    {subscriber.contracts.map(contract => (*/}
+                {/*        <tr key={contract.id}>*/}
+                {/*            <td>*/}
+                {/*                /!* Ссылка на страницу управления этим конкретным договором *!/*/}
+                {/*                <Link to={`/dashboard/manage-contract/${contract.id}`}>{contract.contractNumber}</Link>*/}
+                {/*            </td>*/}
+                {/*            <td>{contract.serviceAddress}</td>*/}
+                {/*            <td>{new Date(contract.signingDate).toLocaleDateString()}</td>*/}
+                {/*        </tr>*/}
+                {/*    ))}*/}
+                {/*    </tbody>*/}
+                {/*</table>*/}
+
+                <div className="contracts-accordion">
                     {subscriber.contracts.map(contract => (
-                        <tr key={contract.id}>
-                            <td>
-                                {/* Ссылка на страницу управления этим конкретным договором */}
-                                <Link to={`/dashboard/manage-contract/${contract.id}`}>{contract.contractNumber}</Link>
-                            </td>
-                            <td>{contract.serviceAddress}</td>
-                            <td>{new Date(contract.signingDate).toLocaleDateString()}</td>
-                        </tr>
+                        <div key={contract.id} className="accordion-item">
+                            <div
+                                className="accordion-header"
+                                onClick={() => handleToggleContract(contract.id)}
+                            >
+                                <div className="header-main-info">
+                                    <strong>Договор №{contract.contractNumber}</strong>
+                                </div>
+                                <div className="header-summary">
+                                    <span className="total-fee">{contract.monthlyFee.toFixed(2)} руб./мес.</span>
+                                    <span className="expand-icon">
+                                        {expandedContractId === contract.id ? <FaChevronUp /> : <FaChevronDown />}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {expandedContractId === contract.id && (
+                                <div className="accordion-content">
+                                    <div className="contract-details-grid">
+                                        <div className="detail-section">
+                                            <h4>Тариф</h4>
+                                            <p>{contract.tariffName} ({contract.monthlyFee.toFixed(2)} руб.)</p>
+                                        </div>
+                                        <div className="detail-section">
+                                            <h4>Адрес</h4>
+                                            <p>{contract.serviceAddress}</p>
+                                            <h4>Подключенные услуги ({contract.services.length})</h4>
+                                            <ul className="details-services-list">
+                                                {contract.services.length > 0 ? (
+                                                    contract.services.map(service => (
+                                                        <li key={service.id}>
+                                                            <span>{service.serviceName}</span>
+                                                            <span>{service.cost.toFixed(2)} руб.</span>
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li>Нет подключенных услуг</li>
+                                                )}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div className="contract-actions">
+                                        <button onClick={() => handleEditContract(contract.id)} className="btn btn-secondary">Управлять</button>
+                                        <button onClick={() => handleDeleteContract(contract.id)} className="btn btn-danger">Расторгнуть</button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     ))}
-                    </tbody>
-                </table>
+                </div>
             </div>
+
+
+            {/*    <div className="table-wrapper"> /!* Добавляем обертку для возможной прокрутки *!/*/}
+            {/*        <table className="content-table">*/}
+            {/*            <thead>*/}
+            {/*            <tr>*/}
+            {/*                <th>Номер</th>*/}
+            {/*                <th>Адрес</th>*/}
+            {/*                <th>Дата подписания</th>*/}
+            {/*                <th className="actions-column">Действия</th>*/}
+            {/*            </tr>*/}
+            {/*            </thead>*/}
+            {/*            <tbody>*/}
+            {/*            {subscriber.contracts.map(contract => (*/}
+            {/*                <tr key={contract.id}>*/}
+            {/*                    <td>{contract.contractNumber}</td>*/}
+            {/*                    <td>{contract.serviceAddress}</td>*/}
+            {/*                    <td>{new Date(contract.signingDate).toLocaleDateString()}</td>*/}
+            {/*                    <td className="actions-cell"> /!* Ячейка с кнопками *!/*/}
+            {/*                        <button*/}
+            {/*                            onClick={() => handleEditContract(contract.id)}*/}
+            {/*                            className="btn-icon btn-action-edit"*/}
+            {/*                            title="Управлять договором"*/}
+            {/*                        >*/}
+            {/*                            <FaEdit />*/}
+            {/*                        </button>*/}
+            {/*                        <button*/}
+            {/*                            onClick={() => handleDeleteContract(contract.id)}*/}
+            {/*                            className="btn-icon btn-action-delete"*/}
+            {/*                            title="Удалить договор"*/}
+            {/*                        >*/}
+            {/*                            <FaTrash />*/}
+            {/*                        </button>*/}
+            {/*                    </td>*/}
+            {/*                </tr>*/}
+            {/*            ))}*/}
+            {/*            </tbody>*/}
+            {/*        </table>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
             <CreateContractModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}

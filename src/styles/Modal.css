@@ -18,6 +18,55 @@
     z-index: 1000;
 }
 
+.form-group label {
+    /*display: block;*/
+    font-weight: 500;
+    color: #666;
+    margin-right: 0.5rem;
+}
+
+
+.form-actions {
+    display: flex; /* 1. Включаем Flexbox */
+    justify-content: flex-end; /* 2. Прижимаем все дочерние элементы к правому краю */
+    gap: 1rem; /* 3. Создаем отступ между кнопками */
+
+    margin-top: 2rem; /* Отступ сверху от последнего поля формы */
+    padding-top: 1.5rem; /* Отступ сверху внутри блока */
+    border-top: 1px solid #eee; /* Декоративная линия-разделитель */
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary {
+    background-color: #5b2aed; /* Ваш фиолетовый */
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #4a1fcf;
+}
+.btn-primary:disabled {
+    background-color: #c5b3f7;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background-color: #959595; /* Светло-серый фон */
+    color: #333;
+    border: 1px solid #ddd;
+}
+.btn-secondary:hover {
+    background-color: #e2e6ea;
+}
+
 /* контент */
 .modal-content {
     background-color: white;

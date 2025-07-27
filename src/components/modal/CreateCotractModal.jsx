@@ -6,12 +6,6 @@ import Modal from './Modal.jsx';
 const CreateContractModal = ({ isOpen, onClose, subscriberId, onContractCreated }) => {
     const { user } = useContext(AuthContext);
 
-    // Состояние для полей формы
-    // const [contractNumber, setContractNumber] = useState('');
-    // const [serviceAddress, setServiceAddress] = useState('');
-    // const [serviceStartDate, setServiceStartDate] = useState('');
-    // const [selectedTariffId, setSelectedTariffId] = useState('');
-
     const today = new Date().toISOString().split('T')[0];
 
 
@@ -129,7 +123,6 @@ const CreateContractModal = ({ isOpen, onClose, subscriberId, onContractCreated 
 
                 <div className="form-group">
                     <label htmlFor="tariffId">Тариф</label>
-                    {/* onChange теперь вызывает handleTariffChange */}
                     <select id="tariffId" value={formData.tariffId} onChange={handleTariffChange} required>
                         <option value="" disabled>Выберите тариф...</option>
                         {tariffs.map(t => <option key={t.id} value={t.id}>{t.name} ({t.installationFee} руб.)</option>)}
@@ -137,12 +130,25 @@ const CreateContractModal = ({ isOpen, onClose, subscriberId, onContractCreated 
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="startDate">Дата начала действия:</label>
-                    <input id="startDate" type="text" value={formData.serviceStartDate} onChange={handleInputChange} required />
+                    <label htmlFor="signingDate">Дата подписания:</label>
+                    <input
+                        id="signingDate"
+                        type="date"
+                        value={formData.signingDate}
+                        onChange={handleInputChange}
+                        required
+                    />
                 </div>
-
-                <p><strong>Дата подписания:</strong> {new Date().toLocaleDateString()}</p>
-                <p><strong></strong> {new Date().toLocaleDateString()}</p>
+                <div className="form-group">
+                    <label htmlFor="serviceStartDate">Дата начала действия:</label>
+                    <input
+                        id="serviceStartDate"
+                        type="date"
+                        value={formData.serviceStartDate}
+                        onChange={handleInputChange}
+                        required
+                    />
+                </div>
 
                 {/* Отображаем стоимость из состояния */}
                 <p><strong>Ежемесячная плата (стоимость тарифа):</strong> {formData.monthlyFee} руб.</p>

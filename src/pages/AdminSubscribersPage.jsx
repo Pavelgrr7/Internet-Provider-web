@@ -109,13 +109,11 @@ const AdminSubscribersPage = () => {
                         <td>{formatPhoneNumber(subscriber.phoneNumber)}</td>
                         <td>
                             {subscriber.contracts.map(contract => (
-                                // Делаем номер договора кликабельным
                                 <span
                                     key={contract.id}
-                                    className="contract-link"
-                                    onClick={() => handleContractClick(contract.id)}
+                                    className="contract-num"
                                 >
-                                        {contract.contractNumber}
+                                        {contract.contractNumber + ' '}
                                     </span>
                             ))}
                         </td>

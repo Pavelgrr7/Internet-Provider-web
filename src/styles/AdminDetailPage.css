@@ -1,6 +1,6 @@
 /* src/styles/AdminDetailPage.css */
 .admin-detail-page {
-    /* Контейнер страницы */
+
 }
 .detail-card {
     background: #fff;
@@ -50,8 +50,7 @@
     font-size: 1rem;
     color: #999;
 }
-.btn-icon.btn-edit { color: #007bff; }
-.btn-icon:hover { color: #333; }
+
 
 .btn-back {
     display: inline-flex;
@@ -64,4 +63,53 @@
     font-weight: 500;
     cursor: pointer;
     margin-bottom: 1.5rem;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.content-table {
+    width: 100%;
+}
+
+/* Стили для колонки и ячейки "Действия" */
+.actions-column {
+    width: 120px; /* Задаем фиксированную ширину, чтобы кнопки не прыгали */
+    text-align: right !important; /* !important, чтобы перебить общие стили */
+}
+
+.actions-cell {
+    text-align: right !important;
+    white-space: nowrap; /* Запрещаем кнопкам переноситься на новую строку */
+}
+
+.btn-icon.btn-edit { color: #007bff; }
+.btn-icon.btn-action-edit {
+    color: #007bff; /* Синий */
+    margin-right: 1rem; /* Отступ между кнопками */
+}
+.btn-icon.btn-action-delete {
+    color: #dc3545; /* Красный */
+}
+.btn-icon:hover {
+    transform: scale(1.2); /* Небольшое увеличение при наведении */
+    transition: transform 0.2s;
+}
+
+/* Стили для статуса */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.status-badge.status-active {
+    background-color: #e8f5e9; /* Светло-зеленый */
+    color: #2e7d32; /* Темно-зеленый */
+}
+.status-badge.status-inactive {
+    background-color: #fbe9e7; /* Светло-красный */
+    color: #c62828; /* Темно-красный */
 }
