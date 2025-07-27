@@ -1,8 +1,8 @@
 // src/pages/AdminReportsPage.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import CreateReportForm from '../components/CreateReportForm';
-import Modal from '../components/Modal';
+import CreateReportForm from '../components/modal/CreateReportForm.jsx';
+import Modal from '../components/modal/Modal.jsx';
 import { FaPlus } from 'react-icons/fa';
 import '../styles/AdminTablePage.css';
 

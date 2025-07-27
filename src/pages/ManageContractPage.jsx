@@ -1,7 +1,7 @@
 // src/pages/UserManageServicesPage.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import Modal from '../components/Modal';
+import Modal from '../components/modal/Modal.jsx';
 import { FaChevronDown, FaChevronUp, FaPlus, FaTrash } from 'react-icons/fa';
 import '../styles/ManageContractPage.css';
 

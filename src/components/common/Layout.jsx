@@ -108,15 +108,15 @@
 // src/components/Layout.jsx
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import '../styles/Layout.css';
+import { AuthContext } from '../../context/AuthContext.jsx';
+import '../../styles/Layout.css';
 
-import ProfilePage from "../pages/ProfilePage.jsx";
-import UserContractsPage from "../pages/UserContractsPage.jsx";
-import ManageContractPage from "../pages/ManageContractPage.jsx";
-import AdminSubscribersPage from "../pages/AdminSubscribersPage.jsx";
-import AdminTariffsPage from "../pages/AdminTariffsPage.jsx";
-import AdminReportsPage from "../pages/AdminReportsPage.jsx";
+import ProfilePage from "../../pages/ProfilePage.jsx";
+import UserContractsPage from "../../pages/UserContractsPage.jsx";
+import ManageContractPage from "../../pages/ManageContractPage.jsx";
+import AdminSubscribersPage from "../../pages/AdminSubscribersPage.jsx";
+import AdminTariffsPage from "../../pages/AdminTariffsPage.jsx";
+import AdminReportsPage from "../../pages/AdminReportsPage.jsx";
 
 // Компонент-заглушка для главной вкладки
 const OverviewTab = ({ user }) => (

@@ -1,14 +1,8 @@
 import {BrowserRouter, Routes, Route, Link} from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
-import DashboardPage from "./pages/DashboardPage.jsx";
-import Layout from "./components/Layout.jsx";
-import UserContractsPage from "./pages/UserContractsPage.jsx";
+import Layout from "./components/common/Layout.jsx";
 import PrivateRoute from "./context/PrivateRoute.jsx";
-import ProfilePage from "./pages/ProfilePage.jsx";
-import AdminSubscribersPage from './pages/AdminSubscribersPage';
-import AdminTariffsPage from './pages/AdminTariffsPage.jsx';
-import AdminReportsPage from './pages/AdminReportsPage';
-import ManageContractPage from "./pages/ManageContractPage.jsx";
+import AdminSubscriberDetailPage from "./pages/AdminSubscriberDetailPage.jsx";
 
 
 function HomePage() {
@@ -39,6 +33,7 @@ function App() {
                         </PrivateRoute>
                     }
                 />
+                <Route path="/dashboard/admin/subscribers/:subscriberId" element={<AdminSubscriberDetailPage />} />
             </Routes>
         </BrowserRouter>
     );
