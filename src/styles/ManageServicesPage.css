@@ -54,8 +54,28 @@
 
 
 .btn-add-service {
-    /* ... стили для кнопки добавления ... */
 }
+
+.disconnected-services-list {
+    background-color: #fffbe6; /* Светло-желтый фон */
+    border: 1px solid #ffe58f;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+.disconnected-services-list li {
+    margin-bottom: 0.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
 
 @keyframes fadeIn {
     from { opacity: 0; }

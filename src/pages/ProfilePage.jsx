@@ -2,9 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { FaEdit } from 'react-icons/fa'; // Иконка карандаша
 import '../styles/ProfilePage.css';
+import {useNavigate} from "react-router-dom";
 
 const ProfilePage = () => {
-    const { user } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext);
     const [profileData, setProfileData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -16,7 +17,14 @@ const ProfilePage = () => {
 
     const [message, setMessage] = useState('');
 
+    const navigate = useNavigate();
+
     const url = 'http://127.0.0.1:8080/api/users/my';
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -165,6 +173,9 @@ const ProfilePage = () => {
 
             {/* Сообщение для пользователя */}
             {message && <div className="profile-message">{message}</div>}
+            <button onClick={handleLogout} className="tab-button" style={{ marginLeft: 'auto' }}>
+                Выйти
+            </button>
         </>
     );
 };

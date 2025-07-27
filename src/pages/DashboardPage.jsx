@@ -5,11 +5,11 @@ import { AuthContext } from '../context/AuthContext.jsx';
 import '../styles/DashboardTabs.css';
 
 import ProfilePage from './ProfilePage';
-import UserContractsPage from './UserContractPage';
-import UserManageServicesPage from './UserManageServicesPage';
+import UserContractsPage from './UserContractsPage.jsx';
 import AdminSubscribersPage from './AdminSubscribersPage';
 import AdminTariffsPage from "./AdminTariffsPage.jsx";
 import AdminReportsPage from "./AdminReportsPage.jsx";
+import ManageContractPage from "./ManageContractPage.jsx";
 
 // Компонент-заглушка для общей информации
 const OverviewTab = ({ user }) => (
@@ -27,24 +27,20 @@ const OverviewTab = ({ user }) => (
 
 
 const DashboardPage = () => {
-    const { user, logout } = useContext(AuthContext);
-    const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
+    // const navigate = useNavigate();
+
 
     // 1. Состояние для хранения активной вкладки.
     // 'overview' - это наша начальная вкладка.
     const [activeTab, setActiveTab] = useState('overview');
-
-    const handleLogout = () => {
-        logout();
-        navigate('/login');
-    };
 
     // 2. Определяем вкладки для каждой роли
     const userTabs = [
         { id: 'overview', label: 'Общая информация' },
         { id: 'profile', label: 'Профиль' },
         { id: 'contract', label: 'Мои договоры' },
-        { id: 'services', label: 'Доп. услуги' },
+        { id: 'manageContract', label: 'Управление' },
     ];
 
     const adminTabs = [
@@ -66,8 +62,8 @@ const DashboardPage = () => {
                 return <ProfilePage />;
             case 'contract':
                 return <UserContractsPage />;
-            case 'services':
-                return <UserManageServicesPage />;
+            case 'manageContract':
+                return <ManageContractPage />;
             case 'subscribers':
                 return <AdminSubscribersPage />;
             case 'tariffs':
@@ -99,9 +95,6 @@ const DashboardPage = () => {
                             {tab.label}
                         </button>
                     ))}
-                    <button onClick={handleLogout} className="tab-button" style={{ marginLeft: 'auto' }}>
-                        Выйти
-                    </button>
                 </div>
             </div>
 

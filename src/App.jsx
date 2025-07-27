@@ -2,13 +2,13 @@ import {BrowserRouter, Routes, Route, Link} from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from "./pages/DashboardPage.jsx";
 import Layout from "./components/Layout.jsx";
-import UserContractsPage from "./pages/UserContractPage.jsx";
+import UserContractsPage from "./pages/UserContractsPage.jsx";
 import PrivateRoute from "./context/PrivateRoute.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import AdminSubscribersPage from './pages/AdminSubscribersPage';
 import AdminTariffsPage from './pages/AdminTariffsPage.jsx';
 import AdminReportsPage from './pages/AdminReportsPage';
-import UserManageServicesPage from './pages/UserManageServicesPage.jsx';
+import ManageContractPage from "./pages/ManageContractPage.jsx";
 
 
 function HomePage() {
@@ -44,7 +44,7 @@ function App() {
 
                     <Route path="my-contract" element={<UserContractsPage />} />
                     <Route path="profile" element={<ProfilePage />} />
-                    <Route path="services" element={<UserManageServicesPage />} />
+                    <Route path="manageContract" element={<ManageContractPage />} />
                     <Route path="admin/subscribers" element={<AdminSubscribersPage />} />
                     <Route path="admin/reports" element={<AdminReportsPage />} />
                     <Route path="admin/tariffs" element={<AdminTariffsPage />} />
