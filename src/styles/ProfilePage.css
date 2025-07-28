@@ -9,6 +9,7 @@
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-top: 2rem;
     margin-bottom: 2rem;
 }
 .profile-card h3 {
@@ -43,6 +44,7 @@
 
 .input-group label {
     display: block;
+    margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #7a7e81;
@@ -58,6 +60,8 @@
     box-sizing: border-box;
     transition: border-color 0.2s, box-shadow 0.2s;
     background-color: #f4f4f4;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .profile-message {

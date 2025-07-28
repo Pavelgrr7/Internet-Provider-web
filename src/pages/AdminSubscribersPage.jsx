@@ -62,7 +62,7 @@ const AdminSubscribersPage = () => {
     const handleContractClick = async (contractId) => {
         setIsModalOpen(true);
         setIsModalLoading(true);
-        setSelectedContract(null); // Сбрасываем старые данные
+        setSelectedContract(null);
 
         try {
             const response = await fetch(`http://127.0.0.1:8080/api/contracts/${contractId}`, {

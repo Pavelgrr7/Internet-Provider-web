@@ -82,13 +82,11 @@ const AdminSubscriberDetailPage = () => {
     };
 
     const handleEditContract = (contractId) => {
-        // Перенаправляем на страницу управления этим договором,
-        // которую вы уже сделали для абонентов
+
         navigate(`/dashboard/manage-contract/${contractId}`);
     };
 
     const handleDeleteContract = (contractId) => {
-        // Здесь будет логика для открытия модального окна подтверждения удаления
         if (window.confirm(`Вы уверены, что хотите удалить договор №${contractId}?`)) {
             console.log("Удаляем договор:", contractId);
             // ... fetch-запрос DELETE /api/contracts/{contractId} ...
