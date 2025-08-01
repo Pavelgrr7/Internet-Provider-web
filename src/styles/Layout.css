@@ -1,0 +1,125 @@
+/* src/styles/Layout.css */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #f0f2f5;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+body {
+    background-color: #f0f2f5; /* Фон для всей страницы */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.tabs-bar {
+    display: flex;
+}
+.tab-button {
+    padding: 1rem 1.5rem;
+    border: none;
+    background-color: transparent;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #666;
+    position: relative;
+    border-bottom: 3px solid transparent; /* "Невидимая" граница */
+    transition: color 0.2s, border-color 0.2s;
+}
+.tab-button:hover {
+    color: #333;
+}
+/* NavLink сам добавит этот класс */
+.tab-button.active {
+    color: #5b2aed;
+    border-bottom-color: #5b2aed;
+}
+.logout-button {
+    /* стили для кнопки Выйти */
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: transparent;
+    cursor: pointer;
+}
+.main-content {
+    flex-grow: 1;
+    width: 100%;
+
+    /* Добавляем flexbox, чтобы легко центрировать дочерний контейнер */
+    display: flex;
+    flex-direction: column; /* чтобы контейнер внутри занимал всю ширину */
+    align-items: center; /* центрируем по горизонтали */
+}
+
+/* --- НОВЫЕ СТИЛИ ДЛЯ КОНТЕЙНЕРА СТРАНИЦЫ-ВКЛАДКИ --- */
+
+.page-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 2rem;
+    box-sizing: border-box;
+
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    /* --- ВОТ РЕШЕНИЕ ПРОБЛЕМЫ С ОТСТУПАМИ --- */
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+
+.tab-page-container {
+    /* Добавляем отступы, которые раньше были у main-content */
+    padding: 2rem;
+    background-color: #fff; /* Белый фон для всей области контента */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-top: 2rem; /* <-- ВАЖНО: Отступ от "липкого" хедера */
+    margin-bottom: 2rem; /* <-- ВАЖНО: Отступ до футера */
+}
+
+.tab-page-title {
+    margin-top: 0; /* Убираем стандартный отступ у h1 */
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    flex-shrink: 0;
+}

@@ -1,0 +1,54 @@
+/* src/styles/common.css */
+
+/* Общий стиль для карточки-виджета */
+.widget-card {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+}
+
+.widget-card h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+/* Общий стиль для таблицы */
+.widget-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.widget-table th, .widget-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.widget-table th {
+    background-color: #f8f9fa;
+}
+
+/* Общий стиль для кнопки */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: #1877f2;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}

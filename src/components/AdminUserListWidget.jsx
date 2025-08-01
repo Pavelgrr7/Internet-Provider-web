@@ -1,3 +1,6 @@
+import '../styles/index.css';
+
+
 const AdminUserListWidget = () => {
     return (
         <div>

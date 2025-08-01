@@ -1,0 +1,39 @@
+/* src/styles/EditTariffModal.css */
+
+.modal-tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1.5rem;
+}
+
+.modal-tabs .tab-button {
+    /* Копируем стили вкладок из DashboardTabs.css */
+    padding: 0.75rem 1rem;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: none;
+    cursor: pointer;
+}
+
+.modal-tabs .tab-button.active {
+    color: #5b2aed;
+    border-bottom-color: #5b2aed;
+}
+
+.services-list-modal {
+    list-style: none;
+    padding: 0;
+}
+
+.services-list-modal li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.service-actions {
+    display: flex;
+    gap: 1rem;
+}
