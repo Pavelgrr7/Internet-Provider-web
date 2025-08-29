@@ -15,12 +15,9 @@ const ManageContractPage = () => {
     const [expandedContractId, setExpandedContractId] = useState(null);
 
     //Состояния для смены тарифа
-    const [isChangingTariff, setIsChangingTariff] = useState(false); // Показываем ли форму смены
-    const [availableTariffs, setAvailableTariffs] = useState([]); // Список доступных тарифов
+    const [isChangingTariff, setIsChangingTariff] = useState(false);
+    const [availableTariffs, setAvailableTariffs] = useState([]);
     const [selectedTariffId, setSelectedTariffId] = useState('');
-
-    // Состояние для аккордеона: храним ID открытой строки
-    // const [expandedRowId, setExpandedRowId] = useState(null);
 
     // Состояния для модального окна доп. услуг
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -87,7 +84,6 @@ const ManageContractPage = () => {
 
         setIsSubmitting(true);
         try {
-            // 1. Делаем запрос на "предпросмотр"
             const response = await fetch(
                 `http://127.0.0.1:8080/api/contracts/${contractId}/change-tariff-preview?newTariffId=${selectedTariffId}`,
                 { headers: { 'Authorization': `Bearer ${user.token}` } }
@@ -96,12 +92,10 @@ const ManageContractPage = () => {
             const previewData = await response.json();
             setTariffChangePreview(previewData);
 
-            // 2. Решаем, что делать дальше
             if (previewData.servicesToDisconnect.length > 0) {
-                // Если есть отключаемые услуги, показываем подтверждающий диалог
+                // Если есть отключаемые услуги, отображается подтверждающий диалог
                 setIsConfirmModalOpen(true);
             } else {
-                // Если отключать нечего, сразу отправляем запрос на смену
                 await confirmTariffChange(contractId, selectedTariffId);
             }
         } catch (error) {
@@ -148,11 +142,6 @@ const ManageContractPage = () => {
         }
     };
 
-    // // Обработчик клика по строке для раскрытия/скрытия
-    // const handleRowClick = (contractId) => {
-    //     setExpandedRowId(prevId => (prevId === contractId ? null : contractId));
-    // };
-
     // Открытие модального окна и загрузка доступных услуг
     const handleOpenAddModal = async (contract) => {
         setIsModalOpen(true);
@@ -177,9 +166,7 @@ const ManageContractPage = () => {
                 headers: { 'Authorization': `Bearer ${user.token}` }
             });
 
-            // 1. Просто проверяем, что запрос прошел успешно
             if (!response.ok) {
-                // Можно получить текст ошибки, если сервер его отправляет
                 const errorText = await response.text();
                 throw new Error(`Ошибка на сервере: ${response.status} ${errorText}`);
             }
@@ -188,13 +175,13 @@ const ManageContractPage = () => {
 
             setContracts(currentContracts => {
                 return currentContracts.map(contract => {
-                    // Если это не тот договор, который мы меняли, возвращаем его как есть
+                    // поиск нужного договора
                     if (contract.id !== contractId) {
                         return contract;
                     }
 
                     const deletedService = contract.services.find(service => service.serviceId)
-                    // Если это НАШ договор, создаем его новую копию
+                    // Обновление договора
                     return {
                         ...contract,
                         monthlyFee: contract.monthlyFee - deletedService.cost,
@@ -289,10 +276,6 @@ const ManageContractPage = () => {
     if (!contract) return <div>Нет активных договоров для управления.</div>;
 
     return (
-        // <>
-        //         <h1>Управление договорами</h1>
-        //
-        //         {/* --- СОЗДАЕМ АККОРДЕОН ИЗ СПИСКА ДОГОВОРОВ --- */}
                 <div className="accordion">
                     {contracts.map(contract => (
                         <div key={contract.id} className="accordion-item">
@@ -303,15 +286,12 @@ const ManageContractPage = () => {
                                 <span>Договор №{contract.contractNumber} (Адрес: {contract.serviceAddress})</span>
                                 {expandedContractId === contract.id ? <FaChevronUp /> : <FaChevronDown />}
                             </div>
-                            {/* --- РЕНДЕРИМ СОДЕРЖИМОЕ ТОЛЬКО ДЛЯ РАСКРЫТОГО ДОГОВОРА --- */}
                             {expandedContractId === contract.id && (
                                 <div className="accordion-content">
-                                    {/* --- БЛОК 1: УПРАВЛЕНИЕ ТАРИФОМ --- */}
                                     <div className="management-section">
                                         <h2>Текущий тариф</h2>
                                         <div className="current-tariff-info">
                                             <strong>{contract.tariffName}</strong>
-                                            {/* --- ИСПОЛЬЗУЕМ НОВОЕ ПОЛЕ tariffCost --- */}
                                             <span>{contract.tariffMonthlyFee.toFixed(2)} руб./мес.</span>
                                         </div>
                     {!isChangingTariff ? (
@@ -332,21 +312,18 @@ const ManageContractPage = () => {
                             <button
                                 onClick={() => handlePreviewTariffChange(contract.id)}
                                 className="btn btn-primary"
-                                disabled={isSubmitting} // Блокируем кнопку во время запроса
+                                disabled={isSubmitting}
                             >{isSubmitting ? 'Проверка...' : 'Подтвердить'}</button>
                             <button onClick={() => setIsChangingTariff(false)} className="btn btn-tertiary">Отмена</button>
                         </div>
                         )}
                                     </div>
-                                    {/* --- БЛОК 2: УПРАВЛЕНИЕ УСЛУГАМИ --- */}
                                     <div className="management-section">
                                         <h2>Подключенные услуги ({contract.services.length})</h2>
                                         <ul className="services-list">
                                             {contract.services.length > 0 ? (
-                                                // Итерируемся по УСЛУГАМ текущего договора, а не по всем договорам
                                                 contract.services.map(service => (
-                                                    // Дочерним элементом <ul> должен быть <li>
-                                                    <li key={service.id}> {/* Убедитесь, что у услуги есть id */}
+                                                    <li key={service.id}>
                                                         <span>{service.serviceName} ({service.cost.toFixed(2)} руб.)</span>
                                                         <button
                                                             onClick={() => handleDisconnectService(contract.id, service.serviceId)}
@@ -390,7 +367,7 @@ const ManageContractPage = () => {
             </Modal>
             <Modal isOpen={isConfirmModalOpen} onClose={() => setIsConfirmModalOpen(false)}>
                 <h2>Подтвердите смену тарифа</h2>
-                <p>При переходе на новый тариф следующие подключенные услуги будут **автоматически отключены**, так как они недоступны:</p>
+                <p>При переходе на новый тариф следующие подключенные услуги будут автоматически отключены, так как они недоступны:</p>
                 <ul className="disconnected-services-list">
                     {tariffChangePreview.servicesToDisconnect.map(service => (
                         <li key={service.id}>{service.serviceName}</li>
@@ -418,5 +395,4 @@ const ManageContractPage = () => {
 
     );
 };
-
 export default ManageContractPage;

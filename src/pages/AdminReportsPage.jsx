@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import CreateReportForm from '../components/modal/CreateReportForm.jsx';
 import Modal from '../components/modal/Modal.jsx';
-import { FaPlus } from 'react-icons/fa';
+import {FaEdit, FaPlus, FaTrash} from 'react-icons/fa';
 import '../styles/AdminTablePage.css';
 
 const AdminReportsPage = () => {
@@ -82,6 +82,7 @@ const AdminReportsPage = () => {
                         <th>Сумма платежей (руб.)</th>
                         <th>Мин. срок (дней)</th>
                         <th>Макс. срок (дней)</th>
+                        <th>Действия</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -95,6 +96,20 @@ const AdminReportsPage = () => {
                                 <td>{report.totalPayments.toFixed(2)}</td>
                                 <td>{report.minDurationDays}</td>
                                 <td>{report.maxDurationDays}</td>
+                                <td className={'action-buttons'} >
+                                    <button
+                                        className="btn-action btn-edit"
+                                        onClick={() => handleEditClick(tariff)}
+                                    >
+                                        <FaEdit />
+                                    </button>
+                                    <button
+                                        className="btn-action btn-delete"
+                                        onClick={() => handleDeleteClick(tariff)}
+                                    >
+                                        <FaTrash />
+                                    </button>
+                                </td>
                             </tr>
                         ))
                     ) : (

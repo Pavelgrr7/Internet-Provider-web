@@ -113,3 +113,11 @@
     background-color: #fbe9e7; /* Светло-красный */
     color: #c62828; /* Темно-красный */
 }
+
+.contract-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    gap: 0.5rem;
+}

@@ -109,3 +109,13 @@
 .btn-primary {
     background-color: #5b2aed; /* Ваш фиолетовый */
 }
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+.btn-new {
+    display: flex;
+    justify-content: flex-end;
+}

@@ -1,3 +1,5 @@
+// src/App.jsx
+
 import {BrowserRouter, Routes, Route, Link} from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import Layout from "./components/common/Layout.jsx";
@@ -21,7 +23,6 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/* Публичные роуты, доступные всем */}
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
 

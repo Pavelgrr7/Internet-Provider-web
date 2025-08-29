@@ -72,7 +72,6 @@ const UserContractsPage = () => {
             <div className="accordion">
                 {contracts.map(contract => (
                     <div key={contract.id} className="accordion-item">
-                        {/* 5. Кликабельный заголовок аккордеона */}
                         <div
                             className={`accordion-header ${expandedContractId === contract.id ? 'active' : ''}`}
                             onClick={() => handleToggleContract(contract.id)}
@@ -86,8 +85,6 @@ const UserContractsPage = () => {
                                 <p><strong>Адрес подключения:</strong> {contract.serviceAddress}</p>
                                 <p><strong>Дата подписания:</strong> {new Date(contract.signingDate).toLocaleDateString()}</p>
                                 <p><strong>Ваш месячный платёж:</strong> {contract.monthlyFee} руб.</p>
-                                {/*<button onClick={}>Изменить</button>*/}
-                                {/* ... и так далее, любая другая информация о договоре ... */}
                             </div>
                         )}
                     </div>

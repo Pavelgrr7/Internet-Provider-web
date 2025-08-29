@@ -103,6 +103,12 @@
     color: #333;
 }
 
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
 /* 4. Анимация появления окна */
 @keyframes fadeIn {
     from {

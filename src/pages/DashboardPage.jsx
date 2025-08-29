@@ -114,7 +114,8 @@ const DashboardPage = () => {
     if (!user) return null;
 
     return (
-        <></>
+        <>
+        </>
     );
 };
 export default DashboardPage;

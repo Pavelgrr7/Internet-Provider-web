@@ -165,27 +165,6 @@ const AdminSubscriberDetailPage = () => {
 
             <div className="detail-card">
                 <h2>Договоры ({subscriber.contracts.length})</h2>
-                {/*<button className="btn btn-primary" onClick={() => setIsCreateModalOpen(true)} style={{marginBottom: '1rem'}}>*/}
-                {/*    <FaPlus /> Новый договор*/}
-                {/*</button>*/}
-                {/*<table className="content-table">*/}
-                {/*    <thead>*/}
-                {/*    <tr><th>Номер</th><th>Адрес</th><th>Дата подписания</th></tr>*/}
-                {/*    </thead>*/}
-                {/*    <tbody>*/}
-                {/*    {subscriber.contracts.map(contract => (*/}
-                {/*        <tr key={contract.id}>*/}
-                {/*            <td>*/}
-                {/*                /!* Ссылка на страницу управления этим конкретным договором *!/*/}
-                {/*                <Link to={`/dashboard/manage-contract/${contract.id}`}>{contract.contractNumber}</Link>*/}
-                {/*            </td>*/}
-                {/*            <td>{contract.serviceAddress}</td>*/}
-                {/*            <td>{new Date(contract.signingDate).toLocaleDateString()}</td>*/}
-                {/*        </tr>*/}
-                {/*    ))}*/}
-                {/*    </tbody>*/}
-                {/*</table>*/}
-
                 <div className="contracts-accordion">
                     {subscriber.contracts.map(contract => (
                         <div key={contract.id} className="accordion-item">
@@ -219,7 +198,7 @@ const AdminSubscriberDetailPage = () => {
                                                 {contract.services.length > 0 ? (
                                                     contract.services.map(service => (
                                                         <li key={service.id}>
-                                                            <span>{service.serviceName}</span>
+                                                            <span>{service.serviceName}: </span>
                                                             <span>{service.cost.toFixed(2)} руб.</span>
                                                         </li>
                                                     ))

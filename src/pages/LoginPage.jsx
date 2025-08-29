@@ -15,7 +15,7 @@ function LoginPage() {
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
-        event.preventDefault(); // Отменяем стандартное поведение формы (перезагрузку страницы)
+        event.preventDefault();
         const requestBody = JSON.stringify({ "login": login, "password": password });
         console.log('Отправляю данные:', requestBody);
 
@@ -60,8 +60,8 @@ function LoginPage() {
                     <input
                         type="text"
                         id="username"
-                        value={login} // Значение привязано к состоянию
-                        onChange={(e) => setLogin(e.target.value)} // При изменении обновляем состояние
+                        value={login}
+                        onChange={(e) => setLogin(e.target.value)}
                         required
                     />
                 </div>
@@ -74,7 +74,6 @@ function LoginPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    {/* Кнопка для переключения видимости пароля */}
                     <button
                         type="button"
                         className="toggle-password"
@@ -90,11 +89,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
-
-
-// let json = JSON.stringify({ "name":"Стандарт",
-//     "declaredSpeed":100,
-//     "installationFee":1000,
-//     "ipAddressType":"Статический",
-//     "startDate":"2019-03-27"})

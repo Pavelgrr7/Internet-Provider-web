@@ -68,8 +68,8 @@
     text-align: center;
     padding: 1rem;
     border-radius: 8px;
-    background-color: #e8f5e9;
-    color: #685670;
+    background-color: rgba(255, 100, 100, 0.22);
+    color: rgba(0, 0, 0, 0.6);
     margin-top: 1rem;
 }
 

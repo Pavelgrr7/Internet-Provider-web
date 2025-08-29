@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import EditTariffModal from '../components/modal/EditTariffModal';
 import ConfirmDialog from '../components/common/ConfirmDialog';
+import {FaChevronDown, FaChevronUp, FaEdit, FaPlus, FaTrash} from 'react-icons/fa';
 import '../styles/AdminTablePage.css';
 
 const AdminTariffsPage = () => {
@@ -65,7 +66,7 @@ const AdminTariffsPage = () => {
             const updatedTariff = await response.json();
             // Иммутабельно обновляем список
             setTariffs(prev => prev.map(t => (t.id === tariffId ? updatedTariff : t)));
-            setIsEditModalOpen(false); // Закрываем окно
+            setIsEditModalOpen(false);
 
         } catch (error) { console.error(error); }
     };
@@ -95,7 +96,7 @@ const AdminTariffsPage = () => {
                 })
             );
 
-            // Важно: также нужно обновить selectedTariff, чтобы модальное окно тоже обновилось
+            // обновить selectedTariff, чтобы модальное окно тоже обновилось
             setSelectedTariff(prev => ({
                 ...prev,
                 availableServices: prev.availableServices.filter(s => s.id !== serviceId)
@@ -133,7 +134,6 @@ const AdminTariffsPage = () => {
                 })
             );
 
-            // Важно: также нужно обновить selectedTariff, чтобы модальное окно тоже обновилось
             setSelectedTariff(prev => ({
                 ...prev,
                 availableServices: prev.availableServices.add(newService),
@@ -144,8 +144,28 @@ const AdminTariffsPage = () => {
         }
     };
 
-    const handleChangeService = async (tariffId, serviceId) => {
+    const handleChangeService = async (tariffId, serviceId, updatedData) => {
+        try {
+            const request = JSON.stringify({ tariffId: tariffId,
+                serviceId: serviceId,
+            updatedData: updatedData });
+            const response = await fetch(`http://127.0.0.1:8080/api/tariffs/${selectedTariff.id}/services/${serviceId}`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${user.token}`,
+                    'Content-Type': 'application/json' },
+                body: request
+            });
+            if (!response.ok) throw new Error('Ошибка изменения');
+            const updatedService  = await response.json();
 
+
+            setSelectedTariff(prev => ({
+                ...prev,
+                availableServices: prev.availableServices.remove(serviceId).add(updatedService),
+            }));
+            setIsDeleteModalOpen(false);
+
+        } catch (error) { console.error(error); }
     };
 
 
@@ -157,9 +177,8 @@ const AdminTariffsPage = () => {
             });
             if (!response.ok) throw new Error('Ошибка удаления');
 
-            // Иммутабельно удаляем из списка
             setTariffs(prev => prev.filter(t => t.id !== selectedTariff.id));
-            setIsDeleteModalOpen(false); // Закрываем окно
+            setIsDeleteModalOpen(false);
 
         } catch (error) { console.error(error); }
     };
@@ -176,8 +195,12 @@ const AdminTariffsPage = () => {
 
     return (
         <>
-            {/* <div className="admin-page-container"> */}
-            <h1>Управление тарифами</h1>
+            <div className="admin-page-header">
+                <h1>Управление тарифами</h1>
+                <button className="btn btn-primary">
+                    <FaPlus /> Новый тариф
+                </button>
+             </div>
             <p>Здесь отображен список всех действующих тарифов компании.</p>
 
             <div className="table-container">
@@ -206,18 +229,18 @@ const AdminTariffsPage = () => {
                             <td>{tariff.ipAddressType}</td>
                             <td>{tariff.startDate}</td>
                             <td>{tariff.availableServices.length}</td>
-                            <td>
+                            <td className={'action-buttons'} >
                                 <button
                                     className="btn-action btn-edit"
                                     onClick={() => handleEditClick(tariff)}
                                 >
-                                    Изменить
+                                    <FaEdit />
                                 </button>
                                 <button
                                     className="btn-action btn-delete"
                                     onClick={() => handleDeleteClick(tariff)}
                                 >
-                                    Удалить
+                                    <FaTrash />
                                 </button>
                             </td>
                         </tr>

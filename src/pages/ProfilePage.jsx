@@ -62,7 +62,7 @@ const ProfilePage = () => {
 
     const handlePasswordChange = async (e) => {
         e.preventDefault();
-        setMessage(''); // Сбрасываем сообщение
+        setMessage('');
 
         const response = await fetch('http://127.0.0.1:8080/api/users/my/password', {
             method: 'PATCH',
