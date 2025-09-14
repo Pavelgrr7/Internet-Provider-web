@@ -7,6 +7,9 @@ import { FaArrowLeft, FaTrash, FaChevronUp, FaChevronDown } from 'react-icons/fa
 import CreateContractModal from '../components/modal/CreateCotractModal';
 
 import '../styles/AdminDetailPage.css';
+import ConfirmDialog from "../components/common/ConfirmDialog.jsx";
+import EditContractModal from "../components/common/EditContractModal.jsx";
+import EditTariffModal from "../components/modal/EditTariffModal.jsx";
 
 // Маленький переиспользуемый компонент для редактируемого поля
 const EditableField = ({ label, value, onSave }) => {
@@ -43,8 +46,6 @@ const EditableField = ({ label, value, onSave }) => {
         </div>
     );
 };
-
-
 const AdminSubscriberDetailPage = () => {
     const { subscriberId } = useParams();
     const { user } = useContext(AuthContext);
@@ -60,6 +61,9 @@ const AdminSubscriberDetailPage = () => {
     };
 
     const [expandedContractId, setExpandedContractId] = useState(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedContract, setSelectedContract] = useState(null); // Храним контракт для редактирования/удаления
 
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -75,22 +79,68 @@ const AdminSubscriberDetailPage = () => {
         if (subscriber && subscriber.contracts && subscriber.contracts.length > 0) {
             setExpandedContractId(subscriber.contracts[0].id);
         }
-    }, [subscriber]); // Запускаем, когда данные абонента загрузятся
+    }, [subscriber]);
 
     const handleToggleContract = (contractId) => {
         setExpandedContractId(prevId => (prevId === contractId ? null : contractId));
     };
-
-    const handleEditContract = (contractId) => {
-
-        navigate(`/dashboard/manage-contract/${contractId}`);
+    const handleEditContractClick = (contract) => {
+        setSelectedContract(contract);
+        setIsEditModalOpen(true);
     };
 
-    const handleDeleteContract = (contractId) => {
-        if (window.confirm(`Вы уверены, что хотите удалить договор №${contractId}?`)) {
-            console.log("Удаляем договор:", contractId);
-            // ... fetch-запрос DELETE /api/contracts/{contractId} ...
-            // и обновление состояния
+    // --- ПОЛНОСТЬЮ ИСПРАВЛЕННЫЙ МЕТОД ---
+    const handleSaveChanges = async (contractId, updatedData) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8080/api/contracts/${contractId}`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData)
+            });
+            if (!response.ok) throw new Error('Ошибка обновления договора');
+
+            const updatedContract = await response.json();
+
+            // Обновляем состояние subscriber иммутабельно
+            setSubscriber(prevSubscriber => {
+                // Создаем новый массив договоров, заменяя в нем обновленный
+                const newContracts = prevSubscriber.contracts.map(c =>
+                    c.id === contractId ? updatedContract : c
+                );
+
+                // Возвращаем новую копию объекта subscriber с новым массивом договоров
+                return {
+                    ...prevSubscriber,
+                    contracts: newContracts
+                };
+            });
+
+            setIsEditModalOpen(false); // Закрываем модальное окно
+
+        } catch (error) {
+            console.error("Ошибка при сохранении изменений:", error);
+        }
+    };
+
+    const handleDeleteConfirm = async (contractId) => {
+        console.log("Удаление контракта:", contractId);
+        try {
+            const response = await fetch(`http://127.0.0.1:8080/api/contracts/{contractId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`,
+                },
+            });
+            if (!response.ok) throw new Error('Ошибка удаление отчета');
+            setSubscriber(prev => ({
+                ...prev,
+                contracts: prev.contracts.filter( c =>
+                c.id !== contractId
+                ),
+            }));
+
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -152,17 +202,16 @@ const AdminSubscriberDetailPage = () => {
             </button>
 
             <h1>Карточка абонента</h1>
-
-            <div className="detail-card">
-                <h2>Личные данные</h2>
-                <p><strong>ID:</strong> {subscriber.id}</p>
-                <EditableField label="ФИО" value={subscriber.fullName} onSave={(val) => handleUpdateField('fullname', val)} />
-                <EditableField label="Паспорт" value={subscriber.passportSeriesNumber} onSave={(val) => handleUpdateField('passport', val)} />
-                <EditableField label="Телефон" value={subscriber.phoneNumber} onSave={(val) => handleUpdateField('phone', val)} />
-                <EditableField label="Email" value={subscriber.email} onSave={(val) => handleUpdateField('email', val)} />
-                <EditableField label="Логин" value={subscriber.login} onSave={(val) => handleUpdateField('login', val)} />
-            </div>
-
+            <div className="detail-page-grid">
+                    <div className="detail-card">
+                        <h2>Личные данные</h2>
+                    <p><strong>ID:</strong> {subscriber.id}</p>
+                    <EditableField label="ФИО" value={subscriber.fullName} onSave={(val) => handleUpdateField('fullname', val)} />
+                    <EditableField label="Паспорт" value={subscriber.passportSeriesNumber} onSave={(val) => handleUpdateField('passport', val)} />
+                    <EditableField label="Телефон" value={subscriber.phoneNumber} onSave={(val) => handleUpdateField('phone', val)} />
+                    <EditableField label="Email" value={subscriber.email} onSave={(val) => handleUpdateField('email', val)} />
+                    <EditableField label="Логин" value={subscriber.login} onSave={(val) => handleUpdateField('login', val)} />
+                </div>
             <div className="detail-card">
                 <h2>Договоры ({subscriber.contracts.length})</h2>
                 <div className="contracts-accordion">
@@ -209,8 +258,8 @@ const AdminSubscriberDetailPage = () => {
                                         </div>
                                     </div>
                                     <div className="contract-actions">
-                                        <button onClick={() => handleEditContract(contract.id)} className="btn btn-secondary">Управлять</button>
-                                        <button onClick={() => handleDeleteContract(contract.id)} className="btn btn-danger">Расторгнуть</button>
+                                        <button onClick={() => handleEditContractClick(contract)} className="btn btn-secondary">Редактировать</button>
+                                        <button onClick={() => setIsDeleteModalOpen(true)} className="btn btn-danger">Расторгнуть</button>
                                     </div>
                                 </div>
                             )}
@@ -219,50 +268,28 @@ const AdminSubscriberDetailPage = () => {
                 </div>
             </div>
 
+            </div>
 
-            {/*    <div className="table-wrapper"> /!* Добавляем обертку для возможной прокрутки *!/*/}
-            {/*        <table className="content-table">*/}
-            {/*            <thead>*/}
-            {/*            <tr>*/}
-            {/*                <th>Номер</th>*/}
-            {/*                <th>Адрес</th>*/}
-            {/*                <th>Дата подписания</th>*/}
-            {/*                <th className="actions-column">Действия</th>*/}
-            {/*            </tr>*/}
-            {/*            </thead>*/}
-            {/*            <tbody>*/}
-            {/*            {subscriber.contracts.map(contract => (*/}
-            {/*                <tr key={contract.id}>*/}
-            {/*                    <td>{contract.contractNumber}</td>*/}
-            {/*                    <td>{contract.serviceAddress}</td>*/}
-            {/*                    <td>{new Date(contract.signingDate).toLocaleDateString()}</td>*/}
-            {/*                    <td className="actions-cell"> /!* Ячейка с кнопками *!/*/}
-            {/*                        <button*/}
-            {/*                            onClick={() => handleEditContract(contract.id)}*/}
-            {/*                            className="btn-icon btn-action-edit"*/}
-            {/*                            title="Управлять договором"*/}
-            {/*                        >*/}
-            {/*                            <FaEdit />*/}
-            {/*                        </button>*/}
-            {/*                        <button*/}
-            {/*                            onClick={() => handleDeleteContract(contract.id)}*/}
-            {/*                            className="btn-icon btn-action-delete"*/}
-            {/*                            title="Удалить договор"*/}
-            {/*                        >*/}
-            {/*                            <FaTrash />*/}
-            {/*                        </button>*/}
-            {/*                    </td>*/}
-            {/*                </tr>*/}
-            {/*            ))}*/}
-            {/*            </tbody>*/}
-            {/*        </table>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
             <CreateContractModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
                 subscriberId={subscriber.id}
                 onContractCreated={handleContractCreated}
+            />
+            <ConfirmDialog
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDeleteConfirm}
+                title="Подтвердите удаление"
+            >
+                <p>Вы уверены, что хотите расторгнуть контракт?</p>
+                <p>Это действие необратимо.</p>
+            </ConfirmDialog>
+            <EditContractModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                contract={selectedContract}
+                onSave={handleSaveChanges}
             />
         </div>
 

@@ -2,12 +2,12 @@
 .admin-detail-page {
 
 }
+
 .detail-card {
     background: #fff;
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    margin-bottom: 2rem;
 }
 .detail-card h2 {
     margin-top: 0;
@@ -28,6 +28,34 @@
 }
 .field-value {
     font-weight: 500;
+}
+
+.detail-page-grid {
+    display: grid;
+    gap: 2rem; /* Отступ между карточками */
+    /* По умолчанию одна колонка, карточки идут друг под другом */
+}
+
+/* 2. Стили для планшетов и небольших десктопов */
+/* @media (min-width: 768px) означает "применить эти стили,
+   если ширина экрана 768px или больше" */
+@media (min-width: 768px) {
+    .detail-page-grid {
+        /* Создаем две колонки */
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* 3. Стили для больших десктопов (опционально, но хорошо) */
+@media (min-width: 1200px) {
+    .detail-page-grid {
+        /*
+           Создаем две колонки, но первая (с личными данными) будет занимать
+           одну "долю" ширины, а вторая (с договорами) - две "доли".
+           Это позволяет сделать более важную секцию шире.
+        */
+        grid-template-columns: 1fr 2fr;
+    }
 }
 
 .view-controls, .edit-controls {

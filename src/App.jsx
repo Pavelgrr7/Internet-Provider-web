@@ -5,6 +5,8 @@ import LoginPage from './pages/LoginPage';
 import Layout from "./components/common/Layout.jsx";
 import PrivateRoute from "./context/PrivateRoute.jsx";
 import AdminSubscriberDetailPage from "./pages/AdminSubscriberDetailPage.jsx";
+import { Toaster } from 'react-hot-toast';
+
 
 
 function HomePage() {
@@ -22,6 +24,16 @@ function HomePage() {
 function App() {
     return (
         <BrowserRouter>
+            <Toaster
+                position="top-right"
+                toastOptions={{
+                    duration: 5000,
+                    style: {
+                        background: '#363636',
+                        color: '#fff',
+                    },
+                }}
+            />
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />

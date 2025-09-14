@@ -5,6 +5,7 @@ import EditTariffModal from '../components/modal/EditTariffModal';
 import ConfirmDialog from '../components/common/ConfirmDialog';
 import {FaChevronDown, FaChevronUp, FaEdit, FaPlus, FaTrash} from 'react-icons/fa';
 import '../styles/AdminTablePage.css';
+import CreateTariffModal from "../components/modal/CreateTariffModal.jsx";
 
 const AdminTariffsPage = () => {
     const { user } = useContext(AuthContext);
@@ -14,6 +15,7 @@ const AdminTariffsPage = () => {
 
     //  Состояния для управления модальными окнами
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedTariff, setSelectedTariff] = useState(null); // Храним тариф для редактирования/удаления
 
@@ -183,7 +185,21 @@ const AdminTariffsPage = () => {
         } catch (error) { console.error(error); }
     };
 
+    const handleCreateTariff = async (formData) => {
+        try {
+            const response = await fetch('http://127.0.0.1:8080/api/tariffs', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            if (!response.ok) throw new Error('Ошибка создания тарифа');
 
+            const newTariff = await response.json();
+            // Добавляем новый тариф в начало списка
+            setTariffs(prev => [newTariff, ...prev]);
+            setIsCreateModalOpen(false); // Закрываем окно
+        } catch (error) { console.error(error); }
+    };
 
     if (isLoading) {
         return <div className="loading-message">Загрузка списка тарифов...</div>;
@@ -197,7 +213,7 @@ const AdminTariffsPage = () => {
         <>
             <div className="admin-page-header">
                 <h1>Управление тарифами</h1>
-                <button className="btn btn-primary">
+                <button className="btn btn-primary" onClick={() => setIsCreateModalOpen(true)}>
                     <FaPlus /> Новый тариф
                 </button>
              </div>
@@ -209,9 +225,7 @@ const AdminTariffsPage = () => {
                     <tr>
                         <th>ID</th>
                         <th>Название</th>
-                        <th>
-                            <text>Скорость</text>
-                        </th>
+                        <th>Скорость</th>
                         <th>Стоимость (в месяц)</th>
                         <th>Тип IP</th>
                         <th>Дата начала действия</th>
@@ -248,6 +262,13 @@ const AdminTariffsPage = () => {
                     </tbody>
                 </table>
             </div>
+
+            <CreateTariffModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                onCreate={handleCreateTariff}
+            />
+
             <EditTariffModal
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}

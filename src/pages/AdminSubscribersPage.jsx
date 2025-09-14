@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/AdminTablePage.css';
 import Modal from '../components/modal/Modal.jsx';
+import {FaPlus} from "react-icons/fa";
 
 //
 const AdminSubscribersPage = () => {
@@ -13,6 +14,7 @@ const AdminSubscribersPage = () => {
     const [error, setError] = useState(null);
 
     const navigate = useNavigate();
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedContract, setSelectedContract] = useState(null);
@@ -21,7 +23,7 @@ const AdminSubscribersPage = () => {
     const handleSubscriberRowClick = (subscriberId) => {
         navigate(`/dashboard/admin/subscribers/${subscriberId}`);
     };
-//
+
     useEffect(() => {
         const fetchSubscribers = async () => {
             if (!user || user.role !== 'ROLE_ADMIN') return;
@@ -79,9 +81,32 @@ const AdminSubscribersPage = () => {
         }
     };
 
+
+    const handleNewSubscriberClick = async (formData) => {
+        try {
+            const response = await fetch('http://127.0.0.1:8080/api/users', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            if (!response.ok) throw new Error('Ошибка создания нового абонента');
+
+            const newSub = await response.json();
+            // Добавляем новый тариф в начало списка
+            setSubscribers(prev => [newSub, ...prev]);
+            setIsCreateModalOpen(false); // Закрываем окно
+        } catch (error) { console.error(error); }
+    }
+
     return (
         <>
+            <div className="admin-page-header">
             <h1>Управление абонентами</h1>
+
+            <button className="btn btn-primary" onClick={() => handleContractClick()}>
+                <FaPlus /> Новый абонент
+            </button>
+            </div>
             <p>Здесь отображен список всех зарегистрированных абонентов.</p>
 
             <div className="table-container">
@@ -95,7 +120,7 @@ const AdminSubscribersPage = () => {
                     <th>Email</th>
                     <th>Телефон</th>
                     <th>Договоры</th>
-                    <th>Действия</th>
+                    {/*<th>Действия</th>*/}
                 </tr>
                 </thead>
                 <tbody>
@@ -123,7 +148,7 @@ const AdminSubscribersPage = () => {
                 </tbody>
             </table>
             </div>
-            {/* --- РЕНДЕРИМ МОДАЛЬНОЕ ОКНО --- */}
+            {/* --- МОДАЛЬНОЕ ОКНО --- */}
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 {isModalLoading ? (
                     <p>Загрузка данных договора...</p>
@@ -133,7 +158,6 @@ const AdminSubscribersPage = () => {
                         <p><strong>Адрес:</strong> {selectedContract.serviceAddress}</p>
                         <p><strong>Дата подписания:</strong> {new Date(selectedContract.signingDate).toLocaleDateString()}</p>
                         <p><strong>Ежемесячная плата:</strong> {selectedContract.monthlyFee} руб.</p>
-                        {/* ... другие детали ... */}
                     </div>
                 ) : (
                     <p>Не удалось загрузить данные.</p>

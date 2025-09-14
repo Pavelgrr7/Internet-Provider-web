@@ -120,11 +120,6 @@ const EditTariffModal = ({ isOpen, onClose, tariff, onSave, onDeleteService, onC
                     </div>
                 )}
             </div>
-
-            {/*<div className="form-actions">*/}
-            {/*    <button type="button" onClick={onClose} className="btn btn-secondary">Отмена</button>*/}
-            {/*    <button type="submit" form="editTariffForm" className="btn btn-primary">Сохранить изменения</button>*/}
-            {/*</div>*/}
         </Modal>
     );
 };

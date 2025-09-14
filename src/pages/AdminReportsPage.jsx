@@ -1,9 +1,10 @@
 // src/pages/AdminReportsPage.jsx
-import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {AuthContext} from '../context/AuthContext';
 import CreateReportForm from '../components/modal/CreateReportForm.jsx';
+import toast from 'react-hot-toast';
 import Modal from '../components/modal/Modal.jsx';
-import {FaEdit, FaPlus, FaTrash} from 'react-icons/fa';
+import {FaArrowDown, FaPlus, FaTrash} from 'react-icons/fa';
 import '../styles/AdminTablePage.css';
 
 const AdminReportsPage = () => {
@@ -62,8 +63,80 @@ const AdminReportsPage = () => {
         }
     };
 
+    const handleDeleteReport = async (report) => {
+        const url = `http://localhost:8080/api/reports?year=${report.reportYear}&tariffId=${report.tariffId}`;
+
+        console.log(url);
+        try {
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${user.token}`,
+                },
+            });
+
+            if (!response.ok) throw new Error('Ошибка удаления отчета');
+            setReports(prevReports =>
+                prevReports.filter( r =>
+                    r.reportYear !== report.reportYear || r.tariffId !== report.tariffId
+            ));
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleUpdateReport = async (report) => {
+        const url = `http://localhost:8080/api/reports/recalculate?year=${report.reportYear}&tariffId=${report.tariffId}`;
+        const toastId = toast.loading('Обновление отчета...');
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${user.token}` },
+            });
+
+            const updatedReport = await response.json();
+
+            if (!response.ok) {
+                toast.error(`Ошибка: ${updatedReport.message || 'Не удалось обновить отчет'}`, { id: toastId });
+                throw new Error('Ошибка обновления данных отчета');
+            }
+
+            const oldReport = reports.find(r =>
+                r.reportYear === updatedReport.reportYear && r.tariffId === updatedReport.tariffId
+            );
+
+            const hasChanges = JSON.stringify(oldReport) !== JSON.stringify(updatedReport);
+
+            if (hasChanges) {
+                setReports(prevReports =>
+                    prevReports.map(currentReport =>
+                        (currentReport.reportYear === updatedReport.reportYear && currentReport.tariffId === updatedReport.tariffId)
+                            ? updatedReport
+                            : currentReport
+                    )
+                );
+                toast.success('Отчет успешно обновлен!', { id: toastId });
+
+            } else {
+                toast.success('Отчет уже содержит актуальные данные.', {
+                    id: toastId,
+                    icon: 'ℹ️',
+                });
+            }
+
+        } catch (error) {
+            if (!toast.isActive(toastId)) {
+                toast.error('Произошла сетевая ошибка.', { id: toastId });
+            }
+            console.error(error);
+        }
+    };
+
     return (
-        <div className="admin-page-container">
+        <>
+        {/*<div className="admin-page-container">*/}
             <div className="admin-page-header">
                 <h1>Отчёты</h1>
                 <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
@@ -99,13 +172,13 @@ const AdminReportsPage = () => {
                                 <td className={'action-buttons'} >
                                     <button
                                         className="btn-action btn-edit"
-                                        onClick={() => handleEditClick(tariff)}
+                                        onClick={() => handleUpdateReport(report)}
                                     >
-                                        <FaEdit />
+                                        <FaArrowDown />
                                     </button>
                                     <button
                                         className="btn-action btn-delete"
-                                        onClick={() => handleDeleteClick(tariff)}
+                                        onClick={() => handleDeleteReport(report)}
                                     >
                                         <FaTrash />
                                     </button>
@@ -127,7 +200,8 @@ const AdminReportsPage = () => {
                     onCancel={() => setIsModalOpen(false)}
                 />
             </Modal>
-        </div>
+        {/*</div>*/}
+        </>
     );
 };
 
