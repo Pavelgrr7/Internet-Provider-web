@@ -66,3 +66,57 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  background-color: #ffffff;
+  color: #212529; /* Темный цвет для текста */
+
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  padding: 10px 12px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #5b2aed;
+  box-shadow: 0 0 0 3px rgba(91, 42, 237, 0.2);
+}
+.checkbox-list div {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: #5b2aed;
+
+  width: 1.2em;
+  height: 1.2em;
+  margin-right: 0.5em;
+}

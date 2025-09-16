@@ -9,7 +9,9 @@ import CreateContractModal from '../components/modal/CreateCotractModal';
 import '../styles/AdminDetailPage.css';
 import ConfirmDialog from "../components/common/ConfirmDialog.jsx";
 import EditContractModal from "../components/common/EditContractModal.jsx";
-import EditTariffModal from "../components/modal/EditTariffModal.jsx";
+import toast from "react-hot-toast";
+import ContractForm from "../components/modal/ContractForm.jsx";
+import Modal from "../components/modal/Modal.jsx";
 
 // Маленький переиспользуемый компонент для редактируемого поля
 const EditableField = ({ label, value, onSave }) => {
@@ -65,6 +67,8 @@ const AdminSubscriberDetailPage = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedContract, setSelectedContract] = useState(null); // Храним контракт для редактирования/удаления
 
+    const [isAddContractModalOpen, setIsAddContractModalOpen] = useState(false);
+
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const handleContractCreated = (newContract) => {
@@ -89,7 +93,6 @@ const AdminSubscriberDetailPage = () => {
         setIsEditModalOpen(true);
     };
 
-    // --- ПОЛНОСТЬЮ ИСПРАВЛЕННЫЙ МЕТОД ---
     const handleSaveChanges = async (contractId, updatedData) => {
         try {
             const response = await fetch(`http://127.0.0.1:8080/api/contracts/${contractId}`, {
@@ -122,25 +125,85 @@ const AdminSubscriberDetailPage = () => {
         }
     };
 
-    const handleDeleteConfirm = async (contractId) => {
-        console.log("Удаление контракта:", contractId);
+    const handleAddContractSubmit = async (contractData) => {
+        const fullContractData = {
+            ...contractData,
+            subscriberId: subscriber.id
+        };
+
         try {
-            const response = await fetch(`http://127.0.0.1:8080/api/contracts/{contractId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${user.token}`,
-                },
+            const response = await fetch('http://127.0.0.1:8080/api/contracts', { // Используем тот же эндпоинт, что и для создания первого договора
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(fullContractData)
             });
-            if (!response.ok) throw new Error('Ошибка удаление отчета');
+            if (!response.ok) throw new Error('Ошибка создания договора');
+
+            const newContract = await response.json();
+
+            // Обновляем список договоров на странице
             setSubscriber(prev => ({
                 ...prev,
-                contracts: prev.contracts.filter( c =>
-                c.id !== contractId
-                ),
+                contracts: [...prev.contracts, newContract]
             }));
+
+            setIsAddContractModalOpen(false); // Закрываем окно
+            toast.success("Новый договор успешно добавлен!");
 
         } catch (error) {
             console.error(error);
+            toast.error("Не удалось добавить договор.");
+        }
+    };
+
+    // const handleDeleteConfirm = async (contractId) => {
+    //     console.log("Удаление контракта:", contractId);
+    //     try {
+    //         const response = await fetch(`http://127.0.0.1:8080/api/contracts/{contractId}`, {
+    //             method: 'DELETE',
+    //             headers: {
+    //                 'Authorization': `Bearer ${user.token}`,
+    //             },
+    //         });
+    //         if (!response.ok) throw new Error('Ошибка удаление отчета');
+    //         setSubscriber(prev => ({
+    //             ...prev,
+    //             contracts: prev.contracts.filter( c =>
+    //             c.id !== contractId
+    //             ),
+    //         }));
+    //
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
+
+    const handleDeleteConfirm = async () => {
+        console.log("Удаление контракта:", selectedContract);
+        try {
+            const response = await fetch(`http://127.0.0.1:8080/api/contracts/${selectedContract.id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${user.token}` }
+            });
+            if (!response.ok) throw new Error('Ошибка удаления');
+
+            const result = await response.json();
+
+            if (result.subscriberDeleted) {
+                // Если абонент был удален, показываем уведомление и перенаправляем
+                toast.success("Договор и абонент были успешно удалены.");
+                navigate(-1); // Возвращаемся к списку
+            } else {
+                // Если удален только договор, просто обновляем список договоров на странице
+                toast.success("Договор успешно расторгнут.");
+                setSubscriber(prev => ({
+                    ...prev,
+                    contracts: prev.contracts.filter(c => c.id !== contractId)
+                }));
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Не удалось удалить договор.");
         }
     };
 
@@ -214,6 +277,14 @@ const AdminSubscriberDetailPage = () => {
                 </div>
             <div className="detail-card">
                 <h2>Договоры ({subscriber.contracts.length})</h2>
+                <button
+                    className="btn btn-primary"
+                    style={{marginBottom: '1rem'}}
+                    onClick={() => setIsAddContractModalOpen(true)}
+                >
+                    <FaPlus />
+                </button>
+
                 <div className="contracts-accordion">
                     {subscriber.contracts.map(contract => (
                         <div key={contract.id} className="accordion-item">
@@ -269,7 +340,12 @@ const AdminSubscriberDetailPage = () => {
             </div>
 
             </div>
-
+            <Modal isOpen={isAddContractModalOpen} onClose={() => setIsAddContractModalOpen(false)}>
+                <ContractForm
+                    onCancel={() => setIsAddContractModalOpen(false)}
+                    onSubmit={handleAddContractSubmit}
+                />
+            </Modal>
             <CreateContractModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
@@ -284,6 +360,7 @@ const AdminSubscriberDetailPage = () => {
             >
                 <p>Вы уверены, что хотите расторгнуть контракт?</p>
                 <p>Это действие необратимо.</p>
+                <p>Если это был единственный договор абонента, он так же будет удалён</p>
             </ConfirmDialog>
             <EditContractModal
                 isOpen={isEditModalOpen}
@@ -292,7 +369,6 @@ const AdminSubscriberDetailPage = () => {
                 onSave={handleSaveChanges}
             />
         </div>
-
     );
 };
 

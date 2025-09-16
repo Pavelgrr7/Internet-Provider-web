@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import '../styles/AdminTablePage.css';
 import Modal from '../components/modal/Modal.jsx';
 import {FaPlus} from "react-icons/fa";
+import CreateSubscriberWizard from "../components/CreateSubscriberWizard.jsx";
 
 //
 const AdminSubscribersPage = () => {
@@ -15,6 +16,7 @@ const AdminSubscribersPage = () => {
 
     const navigate = useNavigate();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isWizardOpen, setIsWizardOpen] = useState(false);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedContract, setSelectedContract] = useState(null);
@@ -61,53 +63,55 @@ const AdminSubscribersPage = () => {
         return <div className="error-message">Ошибка: {error}</div>;
     }
 
-    const handleContractClick = async (contractId) => {
-        setIsModalOpen(true);
-        setIsModalLoading(true);
-        setSelectedContract(null);
+    // const handleContractClick = async (contractId) => {
+    //     setIsModalOpen(true);
+    //     setIsModalLoading(true);
+    //     setSelectedContract(null);
+    //
+    //     try {
+    //         const response = await fetch(`http://127.0.0.1:8080/api/contracts/${contractId}`, {
+    //             headers: { 'Authorization': `Bearer ${user.token}` }
+    //         });
+    //         if (!response.ok) throw new Error('Не удалось загрузить данные договора');
+    //         const data = await response.json();
+    //
+    //         setSelectedContract(data);
+    //     } catch (error) {
+    //         console.error(error);
+    //     } finally {
+    //         setIsModalLoading(false);
+    //     }
+    // };
 
+    const handleCreateFullPackage = async (fullPackageData) => {
         try {
-            const response = await fetch(`http://127.0.0.1:8080/api/contracts/${contractId}`, {
-                headers: { 'Authorization': `Bearer ${user.token}` }
-            });
-            if (!response.ok) throw new Error('Не удалось загрузить данные договора');
-            const data = await response.json();
-
-            setSelectedContract(data);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsModalLoading(false);
-        }
-    };
-
-
-    const handleNewSubscriberClick = async (formData) => {
-        try {
-            const response = await fetch('http://127.0.0.1:8080/api/users', {
+            const response = await fetch('http://127.0.0.1:8080/api/users/create-full', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${user.token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(fullPackageData)
             });
-            if (!response.ok) throw new Error('Ошибка создания нового абонента');
+            if (!response.ok) throw new Error('Ошибка создания абонента и договора');
 
-            const newSub = await response.json();
-            // Добавляем новый тариф в начало списка
-            setSubscribers(prev => [newSub, ...prev]);
-            setIsCreateModalOpen(false); // Закрываем окно
-        } catch (error) { console.error(error); }
-    }
+            const newSubscriber = await response.json();
+
+            setSubscribers(prev => [newSubscriber, ...prev]);
+            setIsWizardOpen(false);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <>
             <div className="admin-page-header">
             <h1>Управление абонентами</h1>
 
-            <button className="btn btn-primary" onClick={() => handleContractClick()}>
+            <button className="btn btn-primary" onClick={() => setIsWizardOpen(true)}>
                 <FaPlus /> Новый абонент
             </button>
             </div>
             <p>Здесь отображен список всех зарегистрированных абонентов.</p>
+            <p>Нажмите по абоненту, чтобы открыть его персональную страницу</p>
 
             <div className="table-container">
                 <table className="content-table">
@@ -119,7 +123,7 @@ const AdminSubscribersPage = () => {
                     <th>Логин</th>
                     <th>Email</th>
                     <th>Телефон</th>
-                    <th>Договоры</th>
+                    <th>Договоры (кол-во)</th>
                     {/*<th>Действия</th>*/}
                 </tr>
                 </thead>
@@ -133,14 +137,7 @@ const AdminSubscribersPage = () => {
                         <td>{subscriber.email}</td>
                         <td>{formatPhoneNumber(subscriber.phoneNumber)}</td>
                         <td>
-                            {subscriber.contracts.map(contract => (
-                                <span
-                                    key={contract.id}
-                                    className="contract-num"
-                                >
-                                        {contract.contractNumber + ' '}
-                                    </span>
-                            ))}
+                            {subscriber.contracts.length}
                         </td>
                     </tr>
                 ))
@@ -148,7 +145,6 @@ const AdminSubscribersPage = () => {
                 </tbody>
             </table>
             </div>
-            {/* --- МОДАЛЬНОЕ ОКНО --- */}
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 {isModalLoading ? (
                     <p>Загрузка данных договора...</p>
@@ -163,6 +159,11 @@ const AdminSubscribersPage = () => {
                     <p>Не удалось загрузить данные.</p>
                 )}
             </Modal>
+            <CreateSubscriberWizard
+                isOpen={isWizardOpen}
+                onClose={() => setIsWizardOpen(false)}
+                onCreate={handleCreateFullPackage}
+            />
         </>
     );
 };

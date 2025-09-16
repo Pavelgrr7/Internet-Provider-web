@@ -200,7 +200,6 @@ const AdminReportsPage = () => {
                     onCancel={() => setIsModalOpen(false)}
                 />
             </Modal>
-        {/*</div>*/}
         </>
     );
 };

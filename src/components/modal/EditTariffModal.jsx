@@ -87,11 +87,11 @@ const EditTariffModal = ({ isOpen, onClose, tariff, onSave, onDeleteService, onC
                                 <input id="installationFee" type="number" value={formData.installationFee} onChange={handleInputChange} />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="installationFee">Тип IP-адреса</label>
+                                <label htmlFor="ipAddressType">Тип IP-адреса</label>
                                 <input id="ipAddressType" type="text" value={formData.ipAddressType} onChange={handleInputChange} />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="installationFee">Дата начала действия</label>
+                                <label htmlFor="startDate">Дата начала действия</label>
                                 <input id="startDate" type="date" value={formData.startDate} onChange={handleInputChange} />
                             </div>
 
